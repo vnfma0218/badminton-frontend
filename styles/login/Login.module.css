@@ -1,0 +1,29 @@
+.login {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loginForm {
+  border: 1px solid black;
+  padding: 1rem;
+  width: 500px;
+  height: 400px;
+}
+
+.form_control {
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 1rem;
+}
+
+.loginForm label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.loginForm input {
+  height: 34px;
+}
