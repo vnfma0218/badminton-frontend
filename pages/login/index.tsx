@@ -20,7 +20,7 @@ const LoginPage = () => {
 
   return (
     <div className={styles.login}>
-      <h1>Login</h1>
+      <h1>Login TODO: next-auth 사용하기</h1>
       <form onSubmit={onSubmitLogin} className={styles.loginForm}>
         <div className={styles.form_control}>
           <label htmlFor="name">Name</label>
