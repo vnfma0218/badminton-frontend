@@ -1,11 +1,12 @@
 import type { NextPage } from 'next';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import axios from 'axios';
+import AuthContext from '../components/contexts/AuthContext';
 
 const Home: NextPage = () => {
-  useEffect(() => {
-    axios.get('http://localhost:3001/home').then((res) => console.log(res));
-  }, []);
+  const { accessToken } = useContext(AuthContext);
+  console.log(accessToken);
+
   return <div>Home page</div>;
 };
 

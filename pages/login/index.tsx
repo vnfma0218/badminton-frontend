@@ -1,25 +1,39 @@
 import axios from 'axios';
-import { FormEvent } from 'react';
+import { useRouter } from 'next/router';
+import { FormEvent, useContext } from 'react';
+import AuthContext from '../../components/contexts/AuthContext';
 import styles from '../../styles/login/Login.module.css';
 
 const LoginPage = () => {
-  const onSubmitLogin = (e: FormEvent) => {
+  const router = useRouter();
+  const { accessToken, setAuth } = useContext(AuthContext);
+  const onSubmitLogin = async (e: FormEvent) => {
     e.preventDefault();
 
-    axios({
+    const res = await axios({
       url: 'http://localhost:3001/login',
       method: 'post',
       data: {
-        name: '푸름쓰',
         email: 'vnfma0218@naver.com',
-        password: '123',
-        passwordChk: '123',
+        password: 'tkfkdgo1!',
       },
     });
-  };
 
+    if (res.status === 200) {
+      setAuth &&
+        setAuth((prev) => ({ ...prev, accessToken: res.data.accessToken }));
+    }
+  };
+  console.log(accessToken);
   return (
     <div className={styles.login}>
+      <button
+        onClick={() => {
+          router.push('/');
+        }}
+      >
+        home
+      </button>
       <h1>Login TODO: next-auth 사용하기</h1>
       <form onSubmit={onSubmitLogin} className={styles.loginForm}>
         <div className={styles.form_control}>
