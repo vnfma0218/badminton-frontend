@@ -31,7 +31,7 @@ const SignupPage = () => {
     }
 
     const res = await axios({
-      url: 'http://localhost:3001/signup',
+      url: 'http://localhost:5050/signup',
       method: 'post',
       data: {
         name,

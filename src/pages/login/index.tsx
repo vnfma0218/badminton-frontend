@@ -1,17 +1,17 @@
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import { FormEvent, useContext } from 'react';
-import AuthContext from '../../components/contexts/AuthContext';
-import styles from '../../styles/login/Login.module.css';
+import AuthContext from 'src/components/contexts/AuthContext';
+import axios from 'src/lib/axios';
+import styles from '../../../styles/login/Login.module.css';
 
 const LoginPage = () => {
   const router = useRouter();
-  const { accessToken, setAuth } = useContext(AuthContext);
+  const { accessToken, updateAuthState } = useContext(AuthContext);
   const onSubmitLogin = async (e: FormEvent) => {
     e.preventDefault();
-
+    console.log('submit');
     const res = await axios({
-      url: 'http://localhost:3001/login',
+      url: 'login',
       method: 'post',
       data: {
         email: 'vnfma0218@naver.com',
@@ -20,11 +20,14 @@ const LoginPage = () => {
     });
 
     if (res.status === 200) {
-      setAuth &&
-        setAuth((prev) => ({ ...prev, accessToken: res.data.accessToken }));
+      // setAuth((prev) => ({
+      //   ...prev,
+      //   accessToken: res.data.accessToken,
+      //   role: 'user',
+      // }));
+      updateAuthState(res.data.accessToken, 'user');
     }
   };
-  console.log(accessToken);
   return (
     <div className={styles.login}>
       <button
@@ -33,6 +36,13 @@ const LoginPage = () => {
         }}
       >
         home
+      </button>
+      <button
+        onClick={() => {
+          router.push('/post/new');
+        }}
+      >
+        post
       </button>
       <h1>Login TODO: next-auth 사용하기</h1>
       <form onSubmit={onSubmitLogin} className={styles.loginForm}>

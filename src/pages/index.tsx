@@ -1,7 +1,6 @@
 import type { NextPage } from 'next';
-import { useContext, useEffect } from 'react';
-import axios from 'axios';
-import AuthContext from '../components/contexts/AuthContext';
+import { useContext } from 'react';
+import AuthContext from 'src/components/contexts/AuthContext';
 
 const Home: NextPage = () => {
   const { accessToken } = useContext(AuthContext);
