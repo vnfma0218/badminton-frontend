@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import AuthContext from 'src/components/contexts/AuthContext';
+import AuthContext from 'src/contexts/AuthContext';
 import { privateAxios } from 'src/lib/axios';
 import useRefreshToken from './useRefreshToken';
 

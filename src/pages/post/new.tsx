@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { FormEvent, useContext } from 'react';
-import AuthContext from 'src/components/contexts/AuthContext';
+import AuthContext from 'src/contexts/AuthContext';
 import usePrivateAxios from 'src/hooks/usePrivateAxios';
 
 const RegisterPostPage = () => {

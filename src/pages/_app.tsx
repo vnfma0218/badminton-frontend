@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
-import { AuthProvider } from 'src/components/contexts/AuthContext';
+import { AuthProvider } from 'src/contexts/AuthContext';
 import { Provider } from 'react-redux';
 import { store } from 'src/store';
 

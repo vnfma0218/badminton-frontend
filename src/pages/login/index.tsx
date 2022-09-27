@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { FormEvent, useContext } from 'react';
-import AuthContext from 'src/components/contexts/AuthContext';
+import AuthContext from 'src/contexts/AuthContext';
 import axios from 'src/lib/axios';
 import styles from '../../../styles/login/Login.module.css';
 
