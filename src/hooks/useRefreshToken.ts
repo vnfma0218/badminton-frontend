@@ -6,10 +6,11 @@ const useRefreshToken = () => {
   const { updateAuthState } = useContext(AuthContext);
 
   const refresh = async () => {
-    const response = await axios.get('/refresh', {
+    console.log('refresh 요청');
+
+    const response = await axios.get('refresh', {
       withCredentials: true,
     });
-    console.log(response.data);
     updateAuthState(response.data.accessToken, 'user');
     return response.data.accessToken;
   };

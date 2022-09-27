@@ -26,25 +26,13 @@ const LoginPage = () => {
       //   role: 'user',
       // }));
       updateAuthState(res.data.accessToken, 'user');
+      router.replace('/');
     }
   };
   return (
     <div className={styles.login}>
-      <button
-        onClick={() => {
-          router.push('/');
-        }}
-      >
-        home
-      </button>
-      <button
-        onClick={() => {
-          router.push('/post/new');
-        }}
-      >
-        post
-      </button>
-      <h1>Login TODO: next-auth 사용하기</h1>
+      {/* <h1>Login TODO: next-auth 사용하기</h1> */}
+      <h1>Login</h1>
       <form onSubmit={onSubmitLogin} className={styles.loginForm}>
         <div className={styles.form_control}>
           <label htmlFor="name">Name</label>

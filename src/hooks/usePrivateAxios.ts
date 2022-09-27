@@ -5,7 +5,6 @@ import useRefreshToken from './useRefreshToken';
 
 const usePrivateAxios = () => {
   const { accessToken } = useContext(AuthContext);
-  console.log('accessToken', accessToken);
   const refresh = useRefreshToken();
 
   useEffect(() => {
@@ -18,7 +17,7 @@ const usePrivateAxios = () => {
       },
 
       (error) => {
-        console.log(error);
+        console.log('error', error);
         Promise.reject(error);
       }
     );
@@ -28,12 +27,14 @@ const usePrivateAxios = () => {
       async (error) => {
         const prevRequest = error?.config;
         if (error?.response?.status === 403 && !prevRequest?.sent) {
+          console.log(error);
           prevRequest.sent = true;
           const newAccessToken = await refresh();
+          console.log(newAccessToken);
           prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
           return privateAxios(prevRequest);
         }
-        console.log(error);
+        // console.log(e  rror);
         return Promise.reject(error);
       }
     );

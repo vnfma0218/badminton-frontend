@@ -3,6 +3,9 @@ import { useEffect } from 'react';
 import { AuthProvider } from 'src/contexts/AuthContext';
 import { Provider } from 'react-redux';
 import { store } from 'src/store';
+import '../../styles/globals.css';
+import '../../styles/reset.css';
+import Navigation from 'src/components/Layout/Navigation';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -11,7 +14,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <AuthProvider>
-        <Component {...pageProps} />
+        <>
+          <Navigation />
+          <Component {...pageProps} />
+        </>
       </AuthProvider>
     </Provider>
   );

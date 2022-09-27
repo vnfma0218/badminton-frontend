@@ -14,3 +14,27 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.navbar {
+  width: 100%;
+  background: blanchedalmond;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.3rem;
+}
+
+.nav-list {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-item {
+  margin-right: 1rem;
+  font-size: 1.3rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+}
