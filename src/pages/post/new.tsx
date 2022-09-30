@@ -1,11 +1,12 @@
 import axios from 'axios';
-import { FormEvent, useContext } from 'react';
-import AuthContext from 'src/contexts/AuthContext';
+import { FormEvent } from 'react';
 import usePrivateAxios from 'src/hooks/usePrivateAxios';
+import { useAppSelector } from 'src/store/hooks';
+import { authState } from 'src/store/slices/authSlice';
 
 const RegisterPostPage = () => {
-  const { accessToken } = useContext(AuthContext);
-  console.log(accessToken);
+  const auth = useAppSelector(authState);
+  console.log(auth);
   const privateAxios = usePrivateAxios();
   const submitPost = async (e: FormEvent) => {
     e.preventDefault();

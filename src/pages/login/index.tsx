@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
-import { FormEvent, useContext } from 'react';
-import AuthContext from 'src/contexts/AuthContext';
+import { FormEvent } from 'react';
 import axios from 'src/lib/axios';
+import { useAppDispatch } from 'src/store/hooks';
+import { updateAuthState } from 'src/store/slices/authSlice';
 import styles from '../../../styles/login/Login.module.css';
 
 const LoginPage = () => {
   const router = useRouter();
-  const { accessToken, updateAuthState } = useContext(AuthContext);
+  const dispatch = useAppDispatch();
   const onSubmitLogin = async (e: FormEvent) => {
     e.preventDefault();
     console.log('submit');
@@ -20,12 +21,9 @@ const LoginPage = () => {
     });
 
     if (res.status === 200) {
-      // setAuth((prev) => ({
-      //   ...prev,
-      //   accessToken: res.data.accessToken,
-      //   role: 'user',
-      // }));
-      updateAuthState(res.data.accessToken, 'user');
+      const { userId, accessToken } = res.data;
+      console.log('login succes', userId, accessToken);
+      dispatch(updateAuthState({ userId, accessToken }));
       router.replace('/');
     }
   };

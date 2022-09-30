@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { FormEvent } from 'react';
-import styles from '../../styles/login/Login.module.css';
+import styles from '../../../styles/login/Login.module.css';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
 
