@@ -1,10 +1,11 @@
-import { useContext, useEffect } from 'react';
-import AuthContext from 'src/contexts/AuthContext';
+import { useEffect } from 'react';
 import { privateAxios } from 'src/lib/axios';
+import { useAppSelector } from 'src/store/hooks';
+import { authState } from 'src/store/slices/authSlice';
 import useRefreshToken from './useRefreshToken';
 
 const usePrivateAxios = () => {
-  const { accessToken } = useContext(AuthContext);
+  const { accessToken } = useAppSelector(authState);
   const refresh = useRefreshToken();
 
   useEffect(() => {

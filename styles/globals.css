@@ -38,3 +38,28 @@ a {
 .page-title {
   font-size: 2.5rem;
 }
+
+.post-section {
+  padding-top: 50px;
+}
+
+.post-list {
+  padding: 10px 20px;
+}
+
+.post {
+  border: 1px solid black;
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.writer {
+  margin-bottom: 20px;
+}
+
+.btns {
+  position: absolute;
+  right: 0;
+  top: 20px;
+}

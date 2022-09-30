@@ -15,6 +15,9 @@ const Navigation = () => {
         <li className="nav-item">
           <Link href={'/post/new'}>Post</Link>
         </li>
+        <li className="nav-item">
+          <Link href={'/post/all'}>All</Link>
+        </li>
       </ul>
     </nav>
   );

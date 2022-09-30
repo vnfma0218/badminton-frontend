@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { FormEvent } from 'react';
-import axios from 'src/lib/axios';
+import { publicAxios } from 'src/lib/axios';
 import { useAppDispatch } from 'src/store/hooks';
 import { updateAuthState } from 'src/store/slices/authSlice';
 import styles from '../../../styles/login/Login.module.css';
@@ -11,8 +11,8 @@ const LoginPage = () => {
   const onSubmitLogin = async (e: FormEvent) => {
     e.preventDefault();
     console.log('submit');
-    const res = await axios({
-      url: 'login',
+    const res = await publicAxios({
+      url: '/login',
       method: 'post',
       data: {
         email: 'vnfma0218@naver.com',

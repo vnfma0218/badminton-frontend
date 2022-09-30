@@ -1,7 +1,7 @@
-import axios from 'axios';
 import styles from '../../../styles/login/Login.module.css';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { publicAxios } from 'src/lib/axios';
 
 type Inputs = {
   name: string;
@@ -29,8 +29,8 @@ const SignupPage = () => {
       });
     }
 
-    const res = await axios({
-      url: 'http://localhost:5050/signup',
+    const res = await publicAxios({
+      url: '/signup',
       method: 'post',
       data: {
         name,
