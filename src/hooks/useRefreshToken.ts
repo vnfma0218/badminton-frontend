@@ -1,17 +1,18 @@
-import { useContext } from 'react';
-import AuthContext from 'src/contexts/AuthContext';
-import axios from 'src/lib/axios';
+import { publicAxios } from 'src/lib/axios';
+import { useAppDispatch } from 'src/store/hooks';
+import { updateAuthState } from 'src/store/slices/authSlice';
 
 const useRefreshToken = () => {
-  const { updateAuthState } = useContext(AuthContext);
-
+  const dispatch = useAppDispatch();
   const refresh = async () => {
     console.log('refresh 요청');
 
-    const response = await axios.get('refresh', {
+    const response = await publicAxios.get('refresh', {
       withCredentials: true,
     });
-    updateAuthState(response.data.accessToken, 'user');
+
+    const { userId, accessToken } = response.data;
+    dispatch(updateAuthState({ accessToken, userId }));
     return response.data.accessToken;
   };
   return refresh;

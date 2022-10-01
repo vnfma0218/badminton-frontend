@@ -18,6 +18,7 @@ const LoginPage = () => {
         email: 'vnfma0218@naver.com',
         password: 'tkfkdgo1!',
       },
+      withCredentials: true,
     });
 
     if (res.status === 200) {

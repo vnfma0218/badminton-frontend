@@ -11,7 +11,7 @@ const PostListPage = () => {
     const getAllPost = async () => {
       const {
         data: { postList },
-      } = await publicAxios.get(`/post/all/${userId ? userId : 'null'}`);
+      } = await publicAxios.get(`/post/all`);
 
       setPostList(postList);
     };
