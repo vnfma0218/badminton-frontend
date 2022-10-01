@@ -1,17 +1,12 @@
-import type { NextPage } from 'next';
-import { useContext } from 'react';
-import Navigation from 'src/components/Layout/Navigation';
-import AuthContext from 'src/contexts/AuthContext';
+import type { NextPage } from 'next'
+import { useContext } from 'react'
+import AuthContext from 'src/contexts/AuthContext'
 
 const Home: NextPage = () => {
-  const { accessToken } = useContext(AuthContext);
-  console.log(accessToken);
+  const { accessToken } = useContext(AuthContext)
+  console.log(accessToken)
 
-  return (
-    <div>
-      <h1>Home Page</h1>
-    </div>
-  );
-};
+  return <h1 className='text-3xl font-bold underline'>Hello world!</h1>
+}
 
-export default Home;
+export default Home
