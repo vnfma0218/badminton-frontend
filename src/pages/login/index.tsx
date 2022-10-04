@@ -3,7 +3,6 @@ import { FormEvent } from 'react'
 import { publicAxios } from 'src/lib/axios'
 import { useAppDispatch } from 'src/store/hooks'
 import { updateAuthState } from 'src/store/slices/authSlice'
-import styles from '../../../styles/login/Login.module.css'
 
 const LoginPage = () => {
   const router = useRouter()
@@ -29,11 +28,9 @@ const LoginPage = () => {
     }
   }
   return (
-    <div className='w-3/4 m-auto pt-32 pb-32 text-center'>
-      <form
-        onSubmit={onSubmitLogin}
-        className='border-solid border-2 border-slate-500 rounded-md p-10 pt-20  '
-      >
+    <div className='w-3/4 m-auto  pb-32 text-center border-solid border-2 border-slate-500 rounded-md p-10 pt-20 '>
+      <h1 className='pb-10 text-4xl'>Login</h1>
+      <form onSubmit={onSubmitLogin}>
         <div className='form-control'>
           <label className='input-group justify-center mb-10'>
             <span className='w-32'>닉네임</span>
@@ -66,6 +63,10 @@ const LoginPage = () => {
           로그인
         </button>
       </form>
+      <div className='pt-10'>
+        <p className='mb-5'>아이디가 없으면 회원가입을 해보세요</p>
+        <button className='btn btn-info'>회원가입</button>
+      </div>
     </div>
   )
 }
