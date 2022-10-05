@@ -1,14 +1,31 @@
 import { useRouter } from 'next/router'
-import { FormEvent } from 'react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import Button from 'src/components/UIElement/Button'
 import { publicAxios } from 'src/lib/axios'
 import { useAppDispatch } from 'src/store/hooks'
 import { updateAuthState } from 'src/store/slices/authSlice'
 
+export type AuthInputs = {
+  nickname: string
+  email: string
+  password: string
+  passwordConfirm: string
+}
+
 const LoginPage = () => {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const onSubmitLogin = async (e: FormEvent) => {
-    e.preventDefault()
+
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AuthInputs>()
+
+  const onSubmitLogin = async (data: AuthInputs) => {
+    console.log(data)
     console.log('submit')
     const res = await publicAxios({
       url: '/login',
@@ -27,21 +44,48 @@ const LoginPage = () => {
       router.replace('/')
     }
   }
+  console.log(watch(), errors)
   return (
-    <div className='w-3/4 m-auto  pb-32 text-center border-solid border-2 border-slate-500 rounded-md p-10 pt-20 '>
+    <div className=' m-auto p-8 border-solid border-2 border-slate-500 rounded-md'>
       <h1 className='pb-10 text-4xl'>Login</h1>
-      <form onSubmit={onSubmitLogin}>
-        <div className='form-control'>
-          <label className='input-group justify-center mb-10'>
-            <span className='w-32'>닉네임</span>
-            <input type='text' placeholder='닉네임...' className='input input-bordered w-72' />
+      <form onSubmit={handleSubmit(onSubmitLogin)} className='m-auto'>
+        <div>
+          <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
+            Nickname
           </label>
+          <input
+            {...register('nickname', {
+              maxLength: {
+                value: 10,
+                message: '닉네임은 10자 이내로 작성해주세요',
+              },
+              required: '닉네임은 필수 입력사항입니다.',
+            })}
+            type='text'
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 w-56'
+            placeholder='John'
+            required
+          />
         </div>
-        <div className='form-control'>
-          <label className='input-group justify-center mb-10'>
+        {errors.nickname?.message && <p className='text-start pt-2'>{errors.nickname?.message}</p>}
+
+        <div className='form-control mb-10'>
+          <label className='input-group justify-center'>
             <span className='w-32'>이메일</span>
-            <input type='text' placeholder='info@site.com' className='input input-bordered w-72' />
+            <input
+              type='text'
+              {...register('email', {
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i,
+                  message: '이메일 형식이 아닙니다.',
+                },
+                required: '이메일은 필수 입력사항입니다.',
+              })}
+              placeholder='info@site.com'
+              className='input input-bordered w-72'
+            />
           </label>
+          {errors.email?.message && <p className='text-start pt-2'>{errors.email?.message}</p>}
         </div>
         <div className='form-control'>
           <label className='input-group justify-center mb-10'>
@@ -59,39 +103,16 @@ const LoginPage = () => {
             />
           </label>
         </div>
-        <button type='submit' className='btn btn-accent'>
+        <Button type='submit' className='btn btn-secondary btn-lg btn-wide'>
           로그인
-        </button>
+        </Button>
       </form>
       <div className='pt-10'>
         <p className='mb-5'>아이디가 없으면 회원가입을 해보세요</p>
-        <button className='btn btn-info'>회원가입</button>
+        <Button className='btn btn-primary'>회원가입</Button>
       </div>
     </div>
   )
 }
 
 export default LoginPage
-// <div className={styles.login}>
-//   {/* <h1>Login TODO: next-auth 사용하기</h1> */}
-//   <h1>Login</h1>
-//   <form onSubmit={onSubmitLogin} className={styles.loginForm}>
-//     <div className={styles.form_control}>
-//       <label htmlFor='name'>Name</label>
-//       <input type='name' placeholder='Your Name' />
-//     </div>
-//     <div className={styles.form_control}>
-//       <label htmlFor='email'>Email</label>
-//       <input type='email' placeholder='Your Email' />
-//     </div>
-//     <div className={styles.form_control}>
-//       <label htmlFor='password'>Password</label>
-//       <input type='password' placeholder='Your Password' />
-//     </div>
-//     <div className={styles.form_control}>
-//       <label htmlFor='password-repeat'>Repeat Password </label>
-//       <input type='password-repreat' placeholder='Repeat Password' />
-//     </div>
-//     <button type='submit'>Submit</button>
-//   </form>
-// </div>

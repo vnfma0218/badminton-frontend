@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ChangeEvent, FormEvent, useState } from 'react'
+import Button from 'src/components/UIElement/Button'
 import usePrivateAxios from 'src/hooks/usePrivateAxios'
 import { useAppSelector } from 'src/store/hooks'
 import { authState } from 'src/store/slices/authSlice'
@@ -40,9 +41,7 @@ const RegisterPostPage = () => {
           placeholder='포스트 작성해주세요'
         ></textarea>
 
-        <button className='btn btn-info w-1/5' type='submit'>
-          완료
-        </button>
+        <Button type='submit'>완료</Button>
       </form>
     </div>
   )
