@@ -1,7 +1,7 @@
 import { publicAxios } from '@/lib/axios'
 import { useRouter } from 'next/router'
 import { FormEvent } from 'react'
-import { publicAxios } from 'src/lib/axios'
+import { useForm } from 'react-hook-form'
 import { useAppDispatch } from 'src/store/hooks'
 import { updateAuthState } from 'src/store/slices/authSlice'
 
@@ -102,13 +102,13 @@ const LoginPage = () => {
             />
           </label>
         </div>
-        <Button type='submit' className='btn btn-secondary btn-lg btn-wide'>
+        <button type='submit' className='btn btn-secondary btn-lg btn-wide'>
           로그인
-        </Button>
+        </button>
       </form>
       <div className='pt-10'>
         <p className='mb-5'>아이디가 없으면 회원가입을 해보세요</p>
-        <Button className='btn btn-primary'>회원가입</Button>
+        <button className='btn btn-primary'>회원가입</button>
       </div>
     </div>
   )
