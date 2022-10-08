@@ -6,7 +6,7 @@ const Home: NextPage = () => {
   const { accessToken } = useContext(AuthContext)
   console.log(accessToken)
 
-  return <h1 className='text-3xl font-bold underline'>Hello world!</h1>
+  return <h1 className='text-3xl font-bold font-Noto underline'>테스트!</h1>
 }
 
 export default Home

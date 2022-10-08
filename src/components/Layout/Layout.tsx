@@ -5,7 +5,11 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  return <div className='container md:mx-auto pt-11'>{children}</div>
+  return (
+    <div data-theme='pastel' className='h-screen container md:mx-auto m-auto'>
+      {children}
+    </div>
+  )
 }
 
 export default Layout

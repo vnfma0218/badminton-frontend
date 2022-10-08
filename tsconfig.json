@@ -16,10 +16,12 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "components/*": ["components/*"],
-      "config/*": ["config/*"],
-      "pages/*": ["pages/*"],
-      "styles/*": ["styles/*"]
+      "@/*": ["src/*"]
+      // "@components/*": ["src/components/*"],
+      // "@service/*": ["src/lib/*", "src/hooks/*"],
+      // "config/*": ["config/*"],
+      // "pages/*": ["pages/*"],
+      // "styles/*": ["styles/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

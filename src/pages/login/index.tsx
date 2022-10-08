@@ -1,6 +1,6 @@
+import { publicAxios } from '@/lib/axios'
 import { useRouter } from 'next/router'
 import { FormEvent } from 'react'
-import { publicAxios } from 'src/lib/axios'
 import { useAppDispatch } from 'src/store/hooks'
 import { updateAuthState } from 'src/store/slices/authSlice'
 

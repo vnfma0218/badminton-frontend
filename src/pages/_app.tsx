@@ -2,11 +2,10 @@ import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
 import { AuthProvider } from 'src/contexts/AuthContext'
 import { Provider } from 'react-redux'
-import { store } from 'src/store'
-import '../../styles/globals.css'
-import '../../styles/reset.css'
-import Navigation from 'src/components/Layout/Navigation'
-import Layout from 'src/components/Layout/Layout'
+import { store } from '@/store'
+import Navigation from '@/components/Layout/Navigation'
+import Layout from '@/components/Layout/Layout'
+import '@/styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -15,8 +14,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <AuthProvider>
-        <Navigation />
         <Layout>
+          <Navigation />
           <Component {...pageProps} />
         </Layout>
       </AuthProvider>

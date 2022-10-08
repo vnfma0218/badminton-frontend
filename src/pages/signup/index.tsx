@@ -1,4 +1,4 @@
-import styles from '../../../styles/login/Login.module.css'
+import styles from '@/styles/login/Login.module.css'
 
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { publicAxios } from 'src/lib/axios'
