@@ -1,28 +1,35 @@
-import axios from 'axios'
+import ToastModal from '@/components/Modal/ToastModal'
+import { alertState, updateAlertState } from '@/store/slices/AlertSlice'
 import { ChangeEvent, FormEvent, useState } from 'react'
-import Button from 'src/components/UIElement/Button'
 import usePrivateAxios from 'src/hooks/usePrivateAxios'
-import { useAppSelector } from 'src/store/hooks'
-import { authState } from 'src/store/slices/authSlice'
+import { useAppDispatch, useAppSelector } from 'src/store/hooks'
 
 const RegisterPostPage = () => {
+  const { show } = useAppSelector(alertState)
+
+  const dispatch = useAppDispatch()
   const [content, setContent] = useState<string>('')
+  const [showPopup, setShowPopup] = useState<boolean>(false)
   const privateAxios = usePrivateAxios()
   const submitPost = async (e: FormEvent) => {
     e.preventDefault()
 
-    const res = await privateAxios({
-      url: '/post/register',
-      method: 'post',
-      data: {
-        content,
-      },
-    })
-    if (res.data.message === '0000') {
-      setContent('')
+    try {
+      const res = await privateAxios({
+        url: '/post/register',
+        method: 'post',
+        data: {
+          content,
+        },
+      })
+      if (res.data.message === '0000') {
+        setContent('')
+      }
+      console.log(res.data)
+    } catch (err) {
+      console.log(err)
+      dispatch(updateAlertState({ show: true, message: '등록에 실패했어요', type: 'info' }))
     }
-
-    console.log(res.data)
   }
 
   const onChangeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -31,18 +38,20 @@ const RegisterPostPage = () => {
   }
 
   return (
-    <div>
-      <form onSubmit={submitPost} className='flex flex-col'>
+    <div className='flex justify-center mt-7'>
+      <form onSubmit={submitPost} className='flex flex-col w-1/2'>
         <label htmlFor='content'> </label>
         <textarea
-          className='textarea textarea-info w-2/4 mb-6 h-40'
+          className='textarea textarea-primary w-full mb-6 h-40'
           onChange={onChangeContent}
           value={content}
           placeholder='포스트 작성해주세요'
         ></textarea>
-
-        <Button type='submit'>완료</Button>
+        <button type='submit' className='btn btn-primary w-full mt-11'>
+          글쓰기
+        </button>
       </form>
+      {show && <ToastModal />}
     </div>
   )
 }

@@ -6,7 +6,7 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div data-theme='pastel' className='h-screen container md:mx-auto m-auto'>
+    <div data-theme='pastel' className='h-screen mb-40'>
       {children}
     </div>
   )

@@ -17,16 +17,18 @@ const Navigation = () => {
 
   const { userId } = useAppSelector(authState)
   return (
-    <nav className='navbar fixed z-40 h-20'>
-      <div className='page-title'>Home</div>
+    <nav className='navbar fixed justify-between w-full z-40 h-20 bg-primary'>
+      <div className='page-title'>
+        <Link href={'/'}>Home</Link>
+      </div>
       <ul className='nav-list'>
-        <li className='nav-item'>
-          <Link href={userId ? '' : '/login'}>{userId ? 'Logout' : 'login'}</Link>
+        <li className='mr-5'>
+          <Link href={userId ? '' : '/login/temp'}>{userId ? 'Logout' : 'login'}</Link>
         </li>
-        <li className='nav-item'>
+        <li className='mr-5'>
           <Link href={'/post/new'}>Post</Link>
         </li>
-        <li className='nav-item'>
+        <li className='mr-5'>
           <Link href={'/post/all'}>All</Link>
         </li>
       </ul>
