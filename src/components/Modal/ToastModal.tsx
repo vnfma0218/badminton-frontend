@@ -4,20 +4,17 @@ import { useEffect } from 'react'
 
 const ToastModal = () => {
   const dispatch = useAppDispatch()
-  const { show, message, duration, type } = useAppSelector(alertState)
+  const { message, duration } = useAppSelector(alertState)
 
-  console.log(show, message, duration, type)
   useEffect(() => {
     setTimeout(() => {
       dispatch(removeAlert())
     }, duration)
-
-    return () => {}
   }, [])
 
   return (
-    <div className={`${show ? '' : 'hidden'} toast absolute left-1/2`}>
-      <div className={`alert alert-${type}`}>
+    <div className='toast'>
+      <div className={`alert alert-${'primary'}`}>
         <div>
           <span>{message}</span>
         </div>

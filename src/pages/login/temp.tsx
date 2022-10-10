@@ -1,6 +1,8 @@
 import { publicAxios } from '@/lib/axios'
 import { useAppDispatch } from '@/store/hooks'
+import { updateAlertState } from '@/store/slices/AlertSlice'
 import { updateAuthState } from '@/store/slices/authSlice'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 
@@ -20,31 +22,37 @@ const Temp = () => {
     formState: { errors },
   } = useForm<Inputs>()
 
-  console.log(watch())
-  console.log('error', errors)
-
   const onSubmitLogin = async (data: Inputs) => {
-    console.log(data)
-    console.log('submit')
-    const res = await publicAxios({
-      url: '/login',
-      method: 'post',
-      data: {
-        email: 'vnfma0218@naver.com',
-        password: 'tkfkdgo1!',
-      },
-      withCredentials: true,
-    })
+    try {
+      const res = await publicAxios({
+        url: '/login',
+        method: 'post',
+        data: {
+          email: data.email,
+          password: data.password,
+        },
+        withCredentials: true,
+      })
 
-    if (res.status === 200) {
-      const { userId, accessToken } = res.data
-      dispatch(updateAuthState({ userId, accessToken }))
-      router.replace('/')
+      if (res.status === 200) {
+        const { userId, accessToken } = res.data
+        dispatch(updateAuthState({ userId, accessToken }))
+        router.replace('/')
+      }
+    } catch (err) {
+      console.log(err)
+      dispatch(
+        updateAlertState({
+          show: true,
+          message: '이메일 혹은 비밀번호를 다시 확인해주세요',
+          type: 'info',
+        }),
+      )
     }
   }
 
   return (
-    <div className='w-full h-full m-auto border p-3 bg-gray-100 flex justify-center items-center'>
+    <div className='w-full h-full m-auto border p-3 bg-gray-100 flex flex-col justify-center items-center'>
       <form onSubmit={handleSubmit(onSubmitLogin)} className='max-w-sm p-8 bg-white rounded-3xl'>
         <h1 className='text-2xl text-center font-bold mb-14'>로그인</h1>
         <input
@@ -67,6 +75,10 @@ const Temp = () => {
         <input
           {...register('password', {
             required: '비밀번호를 입력해주세요',
+            pattern: {
+              value: /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/,
+              message: '8 ~ 16자 영문, 숫자, 특스문자를 1가지씩 조합',
+            },
           })}
           type='password'
           placeholder='password'
@@ -83,6 +95,17 @@ const Temp = () => {
           로그인
         </button>
       </form>
+      <div className='pt-3 grid grid-cols-3 divide-x-[2px] '>
+        <Link href='/signup'>
+          <a className='pl-6 cursor-pointer'>아이디 찾기</a>
+        </Link>
+        <Link href='/signup'>
+          <a className='pl-3 pr-3 cursor-pointer'>비밀번호 찾기</a>
+        </Link>
+        <Link href='/signup'>
+          <a className='pl-3 cursor-pointer'>회원가입</a>
+        </Link>
+      </div>
     </div>
   )
 }

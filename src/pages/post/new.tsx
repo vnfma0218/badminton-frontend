@@ -51,7 +51,6 @@ const RegisterPostPage = () => {
           글쓰기
         </button>
       </form>
-      {show && <ToastModal />}
     </div>
   )
 }

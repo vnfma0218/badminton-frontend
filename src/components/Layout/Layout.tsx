@@ -1,13 +1,18 @@
+import { useAppSelector } from '@/store/hooks'
+import { alertState } from '@/store/slices/AlertSlice'
 import React from 'react'
+import ToastModal from '../Modal/ToastModal'
 
 interface LayoutProps {
   children: React.ReactNode
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const { show } = useAppSelector(alertState)
   return (
     <div data-theme='pastel' className='h-screen mb-40'>
       {children}
+      {show && <ToastModal />}
     </div>
   )
 }

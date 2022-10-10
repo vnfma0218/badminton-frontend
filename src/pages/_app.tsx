@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <AuthProvider>
         <Layout>
           <Navigation />
-          <main className='pt-20 h-full'>
+          <main className='pt-20 h-screen'>
             <Component {...pageProps} />
           </main>
         </Layout>
