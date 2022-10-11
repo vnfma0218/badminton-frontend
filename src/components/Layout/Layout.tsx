@@ -10,9 +10,10 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const { show } = useAppSelector(alertState)
   return (
-    <div data-theme='pastel' className='h-screen mb-40'>
+    <div data-theme='pastel' className='h-screen'>
       {children}
       {show && <ToastModal />}
+      {/* <ToastModal /> */}
     </div>
   )
 }

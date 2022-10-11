@@ -1,9 +1,11 @@
+import { login } from '@/lib/api/user'
 import { publicAxios } from '@/lib/axios'
 import { useAppDispatch } from '@/store/hooks'
 import { updateAlertState } from '@/store/slices/AlertSlice'
 import { updateAuthState } from '@/store/slices/authSlice'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 type Inputs = {
@@ -15,6 +17,8 @@ const Temp = () => {
   const router = useRouter()
   const dispatch = useAppDispatch()
 
+  const [loading, setLoading] = useState<boolean>(false)
+
   const {
     register,
     handleSubmit,
@@ -23,24 +27,18 @@ const Temp = () => {
   } = useForm<Inputs>()
 
   const onSubmitLogin = async (data: Inputs) => {
+    setLoading(true)
     try {
-      const res = await publicAxios({
-        url: '/login',
-        method: 'post',
-        data: {
-          email: data.email,
-          password: data.password,
-        },
-        withCredentials: true,
-      })
+      const res = await login({ email: data.email, password: data.password })
+
+      console.log('res', res)
 
       if (res.status === 200) {
-        const { userId, accessToken } = res.data
+        const { userId, accessToken } = res
         dispatch(updateAuthState({ userId, accessToken }))
         router.replace('/')
       }
     } catch (err) {
-      console.log(err)
       dispatch(
         updateAlertState({
           show: true,
@@ -49,10 +47,11 @@ const Temp = () => {
         }),
       )
     }
+    setLoading(false)
   }
 
   return (
-    <div className='w-full h-full m-auto border p-3 bg-gray-100 flex flex-col justify-center items-center'>
+    <div className='relative w-full h-full m-auto border p-3 bg-gray-100 flex flex-col justify-center items-center overflow-hidden'>
       <form onSubmit={handleSubmit(onSubmitLogin)} className='max-w-sm p-8 bg-white rounded-3xl'>
         <h1 className='text-2xl text-center font-bold mb-14'>로그인</h1>
         <input
@@ -91,7 +90,11 @@ const Temp = () => {
           </div>
         )}
 
-        <button type='submit' className='btn btn-primary w-full mt-11'>
+        <button
+          type='submit'
+          className={`btn btn-primary w-full mt-11 disabled`}
+          disabled={loading}
+        >
           로그인
         </button>
       </form>

@@ -13,8 +13,8 @@ const ToastModal = () => {
   }, [])
 
   return (
-    <div className='toast'>
-      <div className={`alert alert-${'primary'}`}>
+    <div className='absolute left-1/3 bottom-7'>
+      <div className={`alert alert-${'primary'} bg-primary`}>
         <div>
           <span>{message}</span>
         </div>
