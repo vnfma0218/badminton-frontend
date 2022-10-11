@@ -28,12 +28,11 @@ const RegisterPostPage = () => {
       console.log(res.data)
     } catch (err) {
       console.log(err)
-      dispatch(updateAlertState({ show: true, message: '등록에 실패했어요', type: 'info' }))
+      dispatch(updateAlertState({ show: true, message: '로그인이 필요합니다', type: 'info' }))
     }
   }
 
   const onChangeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    if (!e.target.value) return
     setContent(e.target.value)
   }
 

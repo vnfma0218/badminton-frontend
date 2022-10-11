@@ -6,7 +6,7 @@ import { store } from '@/store'
 import Navigation from '@/components/Layout/Navigation'
 import Layout from '@/components/Layout/Layout'
 import '@/styles/globals.css'
-
+import '@/styles/Pagination.css'
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     console.log('home 실행')
