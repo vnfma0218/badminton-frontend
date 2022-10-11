@@ -2,11 +2,12 @@ import { logout } from '@/lib/api/user'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useAppSelector } from 'src/store/hooks'
-import { authState } from 'src/store/slices/authSlice'
+import { useAppDispatch, useAppSelector } from 'src/store/hooks'
+import { authState, clearAuthState } from 'src/store/slices/authSlice'
 
 const Navigation = () => {
-  const { userId } = useAppSelector(authState)
+  const { userId, accessToken } = useAppSelector(authState)
+  const dispatch = useAppDispatch()
   const router = useRouter()
   const [curRoute, setCurRoute] = useState()
 
@@ -17,9 +18,10 @@ const Navigation = () => {
   }, [])
 
   const onLogout = async () => {
-    console.log('logout')
-
-    const res = await logout()
+    const res = await logout(accessToken)
+    if (res.status === 200) {
+      dispatch(clearAuthState())
+    }
   }
 
   return (

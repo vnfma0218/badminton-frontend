@@ -1,5 +1,4 @@
-import { AxiosPromise } from 'axios'
-import { publicAxios } from '../axios'
+import { privateAxios, publicAxios } from '../axios'
 
 type RequestLogin = {
   email: string
@@ -31,10 +30,13 @@ export const login = async (data: RequestLogin): Promise<LoginResp> => {
   }
 }
 
-export const logout = async (): Promise<Resoponse> => {
-  const res = await publicAxios({
+export const logout = async (accessToken: string): Promise<Resoponse> => {
+  const res = await privateAxios({
     url: '/logout',
     method: 'get',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   })
 
   return {
