@@ -1,4 +1,5 @@
 import { logout } from '@/lib/api/user'
+import { updateAlertState } from '@/store/slices/AlertSlice'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -20,6 +21,7 @@ const Navigation = () => {
   const onLogout = async () => {
     const res = await logout(accessToken)
     if (res.status === 200) {
+      dispatch(updateAlertState({ show: true, message: '로그아웃 했어요' }))
       dispatch(clearAuthState())
     }
   }
@@ -36,7 +38,7 @@ const Navigation = () => {
           </Link>
         </li>
         <li className='mr-5'>
-          <Link href={'/post/new'}>Post</Link>
+          <Link href={'/post/new'}>New</Link>
         </li>
         <li className='mr-5'>
           <Link href={'/post/all'}>All</Link>

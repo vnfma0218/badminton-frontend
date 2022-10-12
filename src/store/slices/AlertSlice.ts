@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../index'
 export type AlertType = 'warning' | 'info' | 'error'
 
@@ -6,7 +6,7 @@ export type AlertType = 'warning' | 'info' | 'error'
 interface AlertState {
   type?: AlertType
   duration?: number
-  show: boolean
+  show?: boolean
   message: string
 }
 
@@ -21,9 +21,9 @@ export const alertSlice = createSlice({
   name: 'alert',
   initialState,
   reducers: {
-    updateAlertState: (state, action) => {
-      const { show, duration, type, message } = action.payload
-      state.show = show
+    updateAlertState: (state, action: PayloadAction<AlertState>) => {
+      const { duration, type, message } = action.payload
+      state.show = true
       state.duration = duration ?? 1200
       state.type = type ?? 'info'
       state.message = message

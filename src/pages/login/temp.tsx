@@ -36,6 +36,7 @@ const Temp = () => {
       if (res.status === 200) {
         const { userId, accessToken } = res
         dispatch(updateAuthState({ userId, accessToken }))
+        dispatch(updateAlertState({ show: true, message: '로그인 성공했어요' }))
         router.replace('/')
       }
     } catch (err) {
