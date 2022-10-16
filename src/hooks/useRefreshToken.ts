@@ -6,7 +6,6 @@ const useRefreshToken = () => {
   const dispatch = useAppDispatch();
   const refresh = async () => {
     console.log('refresh 요청');
-
     const response = await publicAxios.get('refresh', {
       withCredentials: true,
     });

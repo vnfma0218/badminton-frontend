@@ -1,55 +1,64 @@
-import { login } from '@/lib/api/user'
-import { publicAxios } from '@/lib/axios'
-import { useAppDispatch } from '@/store/hooks'
-import { updateAlertState } from '@/store/slices/AlertSlice'
-import { updateAuthState } from '@/store/slices/authSlice'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { login } from '@/lib/api/user';
+import { publicAxios } from '@/lib/axios';
+import { useAppDispatch } from '@/store/hooks';
+import { updateAlertState } from '@/store/slices/AlertSlice';
+import { updateAuthState } from '@/store/slices/authSlice';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 type Inputs = {
-  email: string
-  password: string
-}
+  email: string;
+  password: string;
+};
 
 const Temp = () => {
-  const router = useRouter()
-  const dispatch = useAppDispatch()
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<Inputs>();
 
   const onSubmitLogin = async (data: Inputs) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const res = await login({ email: data.email, password: data.password })
+      const res = await login({ email: data.email, password: data.password });
 
-      console.log('res', res)
+      console.log('res', res);
 
-      if (res.status === 200) {
-        const { userId, accessToken } = res
-        dispatch(updateAuthState({ userId, accessToken }))
-        dispatch(updateAlertState({ show: true, message: '로그인 성공했어요' }))
-        router.replace('/')
+      if (res.resultCode === '0000') {
+        const { userId, accessToken } = res;
+        dispatch(updateAuthState({ userId, accessToken }));
+        dispatch(updateAlertState({ show: true, message: '로그인 성공했어요' }));
+        router.replace('/');
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.log('err', err.code);
+      if (err.code === 'ERR_NETWORK') {
+        console.log('networ ');
+        return dispatch(
+          updateAlertState({
+            message: '네트워크 연결 상태가 좋지 않습니다. 잠시후 시도해주세요',
+          }),
+        );
+      }
       dispatch(
         updateAlertState({
-          show: true,
           message: '이메일 혹은 비밀번호를 다시 확인해주세요',
           type: 'info',
         }),
-      )
+      );
+    } finally {
+      setLoading(false);
     }
-    setLoading(false)
-  }
+  };
 
   return (
     <div className='relative w-full h-full m-auto border p-3 bg-gray-100 flex flex-col justify-center items-center overflow-hidden'>
@@ -111,6 +120,6 @@ const Temp = () => {
         </Link>
       </div>
     </div>
-  )
-}
-export default Temp
+  );
+};
+export default Temp;

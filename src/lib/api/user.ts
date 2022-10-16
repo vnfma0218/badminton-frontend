@@ -1,18 +1,18 @@
-import { privateAxios, publicAxios } from '../axios'
+import { privateAxios, publicAxios } from '../axios';
 
 type RequestLogin = {
-  email: string
-  password: string
+  email: string;
+  password: string;
+};
+
+export interface Response {
+  message: string;
+  resultCode: string;
 }
 
-type Resoponse = {
-  message: string
-  status: number
-}
-
-interface LoginResp extends Resoponse {
-  userId: string
-  accessToken: string
+interface LoginResp extends Response {
+  userId: string;
+  accessToken: string;
 }
 
 export const login = async (data: RequestLogin): Promise<LoginResp> => {
@@ -20,27 +20,27 @@ export const login = async (data: RequestLogin): Promise<LoginResp> => {
     url: '/login',
     method: 'post',
     data,
-  })
+  });
 
   return {
-    status: res.status,
+    resultCode: res.data.resultCode,
     message: res.data.message,
     userId: res.data.userId,
     accessToken: res.data.accessToken,
-  }
-}
+  };
+};
 
-export const logout = async (accessToken: string): Promise<Resoponse> => {
+export const logout = async (accessToken: string): Promise<Response> => {
   const res = await privateAxios({
     url: '/logout',
     method: 'get',
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-  })
+  });
 
   return {
-    status: res.status,
+    resultCode: res.data.resultCode,
     message: res.data.message,
-  }
-}
+  };
+};

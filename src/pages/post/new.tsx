@@ -1,11 +1,10 @@
-import ToastModal from '@/components/Modal/ToastModal';
-import { alertState, updateAlertState } from '@/store/slices/AlertSlice';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { registerPostItem } from '@/lib/api/post';
+import { updateAlertState } from '@/store/slices/AlertSlice';
 import { useForm } from 'react-hook-form';
 import usePrivateAxios from 'src/hooks/usePrivateAxios';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 
-type PostInputs = {
+export type PostInputs = {
   content: string;
   title: string;
 };
@@ -26,19 +25,13 @@ const RegisterPostPage = () => {
     console.log('data', data);
     const { content, title } = data;
     try {
-      const { data } = await privateAxios({
-        url: '/post/register',
-        method: 'post',
-        data: {
-          content,
-          title,
-        },
-      });
-      if (data.resultCode === '0000') {
+      const { resultCode, message } = await registerPostItem(privateAxios, content, title);
+      if (resultCode === '0000') {
+        dispatch(updateAlertState({ message }));
         reset();
       }
-      if (data.resultCode === '422') {
-        dispatch(updateAlertState({ message: data.message }));
+      if (resultCode === '422') {
+        dispatch(updateAlertState({ message }));
       }
     } catch (err: any) {
       dispatch(updateAlertState({ message: '로그인이 필요합니다' }));

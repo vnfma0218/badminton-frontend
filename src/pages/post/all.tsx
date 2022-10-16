@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import classnames from 'classnames';
 import usePrivateAxios from 'src/hooks/usePrivateAxios';
-import { publicAxios } from 'src/lib/axios';
 import ReactPaginate from 'react-paginate';
 import { Post } from 'src/lib/types';
 import styles from '@/styles/Pagination.module.css';
 import { getAllPost } from '@/lib/api/post';
+import Router from 'next/router';
 
 const PostListPage = () => {
   const privateAxios = usePrivateAxios();
@@ -54,6 +53,10 @@ const PostListPage = () => {
     setPageNo(event.selected + 1);
   };
 
+  const onClickPostItem = (id: string) => {
+    Router.push(`/post/${id}`);
+  };
+
   if (loading) return <div>loading...</div>;
   return (
     // <section className='post-section'>
@@ -81,12 +84,7 @@ const PostListPage = () => {
     // </section>
     <>
       {!loading && (
-        <div
-          className={classnames(
-            'issuesPagination overflow-x-auto max-w-2xl m-auto mt-20',
-            styles.pagination,
-          )}
-        >
+        <div className={classnames('issuesPagination overflow-x-auto mt-20', styles.pagination)}>
           <table className='table table-compact w-full'>
             <thead>
               <tr>
@@ -99,7 +97,11 @@ const PostListPage = () => {
             <tbody>
               {postList.map((post, idx) => {
                 return (
-                  <tr className='hover cursor-pointer' key={post.id}>
+                  <tr
+                    className='hover cursor-pointer'
+                    key={post.id}
+                    onClick={() => onClickPostItem(post.id)}
+                  >
                     <th>{idx + 1}</th>
                     <td>{post.title}</td>
                     <td>{post.content}</td>
@@ -107,17 +109,6 @@ const PostListPage = () => {
                   </tr>
                 );
               })}
-              {/* {postList.map((post: any, idx) => {
-                return (
-                  <tr className='hover cursor-pointer' key={post.id}>
-                    <th>{post.id}</th>
-                    <td>{post.title}</td>
-                    <td>{post.category}</td>
-                    <td>{post.price}</td>
-                    <td>{post.rating}</td>
-                  </tr>
-                )
-              })} */}
             </tbody>
           </table>
 

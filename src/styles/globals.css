@@ -19,6 +19,10 @@ a {
   box-sizing: border-box;
 }
 
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 /* .navbar {
   width: 100%;
   background: blanchedalmond;
