@@ -2,11 +2,13 @@ import useRefreshToken from '@/hooks/useRefreshToken';
 import { logout } from '@/lib/api/user';
 import { updateAlertState } from '@/store/slices/AlertSlice';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { authState, clearAuthState } from 'src/store/slices/authSlice';
 
 const Navigation = () => {
+  const router = useRouter();
   const refresh = useRefreshToken();
   const { userId, accessToken } = useAppSelector(authState);
   const dispatch = useAppDispatch();
@@ -43,7 +45,19 @@ const Navigation = () => {
         <li className='mr-5'>
           <div className='dropdown dropdown-end'>
             <label tabIndex={0} className='m-1 cursor-pointer'>
-              <Link href={userId ? '' : '/login/temp'}>{userId ? <a>My</a> : <a>login</a>}</Link>
+              {userId ? (
+                <a>My</a>
+              ) : (
+                <a
+                  onClick={() => {
+                    if (!userId) {
+                      router.push('/login/temp');
+                    }
+                  }}
+                >
+                  login
+                </a>
+              )}
             </label>
             <ul
               tabIndex={0}
