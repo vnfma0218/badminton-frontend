@@ -1,25 +1,25 @@
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { alertState, removeAlert } from '@/store/slices/AlertSlice'
-import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { alertState, removeAlert } from '@/store/slices/AlertSlice';
+import { useEffect } from 'react';
 
 const ToastModal = () => {
-  const dispatch = useAppDispatch()
-  const { message, duration } = useAppSelector(alertState)
+  const dispatch = useAppDispatch();
+  const { message, duration } = useAppSelector(alertState);
 
   useEffect(() => {
     setTimeout(() => {
-      dispatch(removeAlert())
-    }, duration)
-  }, [])
+      dispatch(removeAlert());
+    }, duration);
+  }, []);
 
   return (
-    <div className='absolute left-1/3 bottom-7'>
-      <div className={`alert alert-${'primary'} bg-primary`}>
+    <div className='toast toast-center toast-bottom w-52 mb-40 '>
+      <div className={`alert alert-${'primary'} bg-primary w-full`}>
         <div>
-          <span>{message}</span>
+          <div>{message}</div>
         </div>
       </div>
     </div>
-  )
-}
-export default ToastModal
+  );
+};
+export default ToastModal;

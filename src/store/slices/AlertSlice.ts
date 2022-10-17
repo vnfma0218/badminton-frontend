@@ -24,7 +24,7 @@ const alertSlice = createSlice({
     updateAlertState: (state, action: PayloadAction<AlertState>) => {
       const { duration, type, message } = action.payload;
       state.show = true;
-      state.duration = duration ?? 1200;
+      state.duration = duration ?? 2000;
       state.type = type ?? 'info';
       state.message = message;
     },

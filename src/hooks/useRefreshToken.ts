@@ -10,8 +10,8 @@ const useRefreshToken = () => {
       withCredentials: true,
     });
 
-    const { userId, accessToken } = response.data;
-    dispatch(updateAuthState({ accessToken, userId }));
+    const { userId, accessToken, nickname } = response.data;
+    dispatch(updateAuthState({ accessToken, userId, nickname }));
     return response.data.accessToken;
   };
   return refresh;

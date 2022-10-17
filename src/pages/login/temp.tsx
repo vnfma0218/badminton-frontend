@@ -34,8 +34,8 @@ const Temp = () => {
       console.log('res', res);
 
       if (res.resultCode === '0000') {
-        const { userId, accessToken } = res;
-        dispatch(updateAuthState({ userId, accessToken }));
+        const { userId, accessToken, nickname } = res;
+        dispatch(updateAuthState({ userId, accessToken, nickname }));
         dispatch(updateAlertState({ show: true, message: '로그인 성공했어요' }));
         router.replace('/');
       }
@@ -61,7 +61,7 @@ const Temp = () => {
   };
 
   return (
-    <div className='relative w-full h-full m-auto border p-3 bg-gray-100 flex flex-col justify-center items-center overflow-hidden'>
+    <div className='relative mt-28 m-auto p-3 flex flex-col justify-center items-center '>
       <form onSubmit={handleSubmit(onSubmitLogin)} className='max-w-sm p-8 bg-white rounded-3xl'>
         <h1 className='text-2xl text-center font-bold mb-14'>로그인</h1>
         <input

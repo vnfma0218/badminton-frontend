@@ -7,12 +7,13 @@ type RequestLogin = {
 
 export interface Response {
   message: string;
-  resultCode: string;
+  resultCode: '0000' | '9999';
 }
 
 interface LoginResp extends Response {
   userId: string;
   accessToken: string;
+  nickname: string;
 }
 
 export const login = async (data: RequestLogin): Promise<LoginResp> => {
@@ -27,6 +28,7 @@ export const login = async (data: RequestLogin): Promise<LoginResp> => {
     message: res.data.message,
     userId: res.data.userId,
     accessToken: res.data.accessToken,
+    nickname: res.data.nickname,
   };
 };
 

@@ -5,12 +5,14 @@ import type { RootState } from '../index';
 interface AuthState {
   accessToken: string;
   userId: string;
+  nickname: string;
 }
 
 // Define the initial state using that type
 const initialState: AuthState = {
   accessToken: '',
   userId: '',
+  nickname: '',
 };
 
 const authSlice = createSlice({
@@ -21,6 +23,7 @@ const authSlice = createSlice({
     updateAuthState: (state, action) => {
       state.accessToken = action.payload.accessToken;
       state.userId = action.payload.userId;
+      state.nickname = action.payload.nickname;
     },
     clearAuthState: (state) => {
       state.accessToken = '';
