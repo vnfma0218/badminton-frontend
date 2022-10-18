@@ -21,22 +21,6 @@ const PostListPage = () => {
     };
 
     fetchPosts();
-
-    // https://dummyjson.com/docs/products
-
-    // const get = async () => {
-    //   setLoading(true)
-    //   const skip = (pageNo - 1) * 10
-    //   axios
-    //     .get(`https://dummyjson.com/products/?limit=10&skip=${skip}`)
-    //     .then((res) => {
-    //       setPostList(res.data.products)
-    //       setTotalCnt(res.data.total)
-    //     })
-    //     .catch((err) => console.log(err))
-
-    //   setLoading(false)
-    // }
   }, [pageNo]);
   const onDeletePost = async (postId: string) => {
     try {
@@ -59,29 +43,6 @@ const PostListPage = () => {
 
   if (loading) return <div>loading...</div>;
   return (
-    // <section className='post-section'>
-    //   <ul className='post-list'>
-    //     {/* {postList.map((post, idx) => {
-    //       return (
-    //         <li className='post' key={`${post.content}-${idx}`}>
-    //           <div className='writer'>{`글쓴이 ${post.user.email.split('@')[0]}`}</div>
-    //           <div className='content'>{post.content}</div>
-    //           {post.myPostYn && (
-    //             <div className='btns'>
-    //               <button className='del-btn' onClick={() => onDeletePost(post.id)}>
-    //                 삭제
-    //               </button>
-    //               <button className='modify-btn'>수정</button>
-    //             </div>
-    //           )}
-    //         </li>
-    //       )
-    //     })} */}
-
-    //     {postList.length < 1 && <h1>글 목록이 없어요</h1>}
-    //   </ul>
-    //   {/* {modal.show && <AlertModal message={modal.msg} type={modal.type} duration={2000} />} */}
-    // </section>
     <>
       {!loading && (
         <div className={classnames('issuesPagination overflow-x-auto mt-20', styles.pagination)}>
@@ -104,7 +65,19 @@ const PostListPage = () => {
                   >
                     <th>{idx + 1}</th>
                     <td>{post.title}</td>
-                    <td>{post.content}</td>
+
+                    <td>
+                      {post.comments.length > 0 ? (
+                        <div className='indicator relative'>
+                          <span className='indicator-item badge indicator-top indicator-end badge-secondary absolute -right-2'>
+                            {post.comments.length}
+                          </span>
+                          <span className=''> {`${post.content.slice(0, 50)}...`}</span>
+                        </div>
+                      ) : (
+                        <>{`${post.content.slice(0, 50)}...`}</>
+                      )}
+                    </td>
                     <td>{post.user.name}</td>
                   </tr>
                 );

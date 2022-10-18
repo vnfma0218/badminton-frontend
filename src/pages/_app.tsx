@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <AuthProvider>
         <Layout>
           <Navigation />
-          <main className='pt-20 h-screen max-w-4xl m-auto'>
+          <main className='pt-20 h-screen max-w-5xl m-auto'>
             <Component {...pageProps} />
           </main>
         </Layout>

@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { publicAxios } from '../axios';
-import { Post, User } from '../types';
+import { Comment, Post } from '../types';
 import { Response } from './user';
 
 export interface getPostListResp {
@@ -8,13 +8,7 @@ export interface getPostListResp {
 }
 export interface getPostItemResp {
   post: Post;
-  comments: {
-    id: string;
-    content: string;
-    created_at: string;
-    user: User;
-    isMine: boolean;
-  }[];
+  comments: Comment[];
   myPostYn: boolean;
 }
 
@@ -80,22 +74,6 @@ export const registerPostItem = async (
     method: 'post',
     data: {
       title,
-      content,
-    },
-  });
-
-  return res.data;
-};
-
-export const postComment = async (
-  privateAxios: AxiosInstance,
-  postId: string,
-  content: string,
-): Promise<Response> => {
-  const res = await privateAxios({
-    url: `/comment/${postId}`,
-    method: 'post',
-    data: {
       content,
     },
   });

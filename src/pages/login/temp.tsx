@@ -36,7 +36,7 @@ const Temp = () => {
       if (res.resultCode === '0000') {
         const { userId, accessToken, nickname } = res;
         dispatch(updateAuthState({ userId, accessToken, nickname }));
-        dispatch(updateAlertState({ show: true, message: '로그인 성공했어요' }));
+        dispatch(updateAlertState({ show: true, message: '로그인 했어요' }));
         router.replace('/');
       }
     } catch (err: any) {
@@ -86,7 +86,7 @@ const Temp = () => {
             required: '비밀번호를 입력해주세요',
             pattern: {
               value: /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/,
-              message: '8 ~ 16자 영문, 숫자, 특스문자를 1가지씩 조합',
+              message: '8 ~ 16자 영문, 숫자, 특수문자 1가지씩 조합',
             },
           })}
           type='password'

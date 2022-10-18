@@ -1,12 +1,7 @@
 import ConfirmModal from '@/components/Modal/ConfirmModal';
 import usePrivateAxios from '@/hooks/usePrivateAxios';
-import {
-  deletePostItem,
-  getPostItem,
-  getPostItemResp,
-  postComment,
-  updatePostItem,
-} from '@/lib/api/post';
+import { deleteCommentById, postComment, updateCommnetById } from '@/lib/api/comment';
+import { deletePostItem, getPostItem, getPostItemResp, updatePostItem } from '@/lib/api/post';
 import { Post } from '@/lib/types';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { updateAlertState } from '@/store/slices/AlertSlice';
@@ -28,9 +23,14 @@ const PostDetailPage = () => {
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isCommentMode, setIsCommentMode] = useState<boolean>(false);
+  const [isCommentEditMode, setIsCommentEditMode] = useState<{ isEditing: boolean; id: string }>({
+    isEditing: false,
+    id: '',
+  });
   const [post, setPost] = useState<Post>();
   const [commentList, setCommentList] = useState<getPostItemResp['comments']>([]);
-  const [comment, setComment] = useState<string>('');
+  const [addComment, setAddComment] = useState<string>('');
+  const [updateComment, setUpdateComment] = useState<string>('');
 
   const modalRef = useRef<HTMLLabelElement>(null);
 
@@ -38,6 +38,7 @@ const PostDetailPage = () => {
     try {
       const res = await getPostItem(postId);
       setPost(res.post);
+      console.log(res.post);
       setCommentList(res.comments);
     } catch (error) {}
   };
@@ -81,17 +82,17 @@ const PostDetailPage = () => {
   };
 
   const onSubmitComment = async () => {
-    if (!comment) {
-      dispatch(
+    if (!addComment) {
+      return dispatch(
         updateAlertState({
           message: '댓글을 입력해주세요',
         }),
       );
     }
-    const res = await postComment(privateAxios, postId, comment);
+    const res = await postComment(privateAxios, postId, addComment);
     if (res.resultCode === '0000') {
       fetchPostItem();
-      setComment('');
+      setAddComment('');
       dispatch(
         updateAlertState({
           message: '댓글을 등록했어요',
@@ -99,7 +100,44 @@ const PostDetailPage = () => {
       );
     }
   };
-  console.log(commentList);
+
+  const onSubmitEditComment = async () => {
+    if (!updateComment) {
+      return dispatch(
+        updateAlertState({
+          message: '댓글을 입력해주세요',
+        }),
+      );
+    }
+    const res = await updateCommnetById(privateAxios, isCommentEditMode.id, updateComment);
+    if (res.resultCode === '0000') {
+      fetchPostItem();
+      setIsCommentEditMode({ isEditing: false, id: '' });
+      dispatch(
+        updateAlertState({
+          message: '수정했어요',
+        }),
+      );
+    }
+  };
+
+  const onDeleteComment = async (cId: string) => {
+    const res = await deleteCommentById(privateAxios, cId, postId);
+    if (res.resultCode === '0000') {
+      fetchPostItem();
+      dispatch(
+        updateAlertState({
+          message: '댓글을 삭제했어요',
+        }),
+      );
+    }
+  };
+
+  const onCommentEditMode = (cId: string, content: string) => {
+    setIsCommentEditMode({ isEditing: true, id: cId });
+    setUpdateComment(content);
+  };
+
   return (
     <>
       <section className='mt-24 relative'>
@@ -147,8 +185,8 @@ const PostDetailPage = () => {
         )}
       </section>
       <section className='mt-64'>
-        {/* 댓글 추가 입력창 */}
-        <div className=''>
+        {/* 댓글 입력창 */}
+        <div>
           <div className='flex'>
             <div className='w-16 h-14 border border-primary rounded-full flex items-center justify-center'>
               <p className='text-base linehei'>{nickname}</p>
@@ -157,10 +195,10 @@ const PostDetailPage = () => {
               type='text'
               className='border-b-2 border-slate-400 focus:outline-0  w-full focus:border-slate-700 ml-3'
               placeholder='댓글 추가...'
-              value={comment}
+              value={addComment}
               onFocus={onCommentFocus}
               onChange={(e) => {
-                setComment(e.target.value);
+                setAddComment(e.target.value);
               }}
             />
           </div>
@@ -175,7 +213,7 @@ const PostDetailPage = () => {
               <button
                 onClick={onSubmitComment}
                 className={`btn btn-sm rounded-none ${
-                  comment === '' ? 'bg-slate-100' : 'bg-blue-400'
+                  addComment === '' ? 'bg-slate-100' : 'bg-blue-400'
                 } border-none px-6`}
               >
                 댓글
@@ -183,10 +221,11 @@ const PostDetailPage = () => {
             </div>
           )}
         </div>
-        {/* 댓글 목록 */}
+
         <h3 className='mt-12'>comments</h3>
         <div className='mt-3 px-7 py-4'>
-          <div className='flex justify-between border items-center '>
+          {/* 댓글 필터 */}
+          <div className='flex justify-between border-b pb-2 items-center '>
             <div>
               <span className='mr-3'>전체 댓글</span>
               <span>등록순</span>
@@ -196,41 +235,88 @@ const PostDetailPage = () => {
               <button className='btn btn-sm'>댓글 닫기</button>
             </div>
           </div>
+          {/* 댓글 목록 */}
           <ul className='mt-7'>
+            {commentList.length === 0 && (
+              <p className='h-72 text-2xl mt-20 text-center'>등록된 댓글이 없어요...</p>
+            )}
             {commentList.length > 0 &&
-              commentList?.map((c) => (
-                <div
-                  key={`${c.id}-${c.created_at}`}
-                  className='mb-3 w-full flex py-2 justify-between items-center'
-                >
-                  <div className='w-4/5 flex items-center'>
-                    <div className='w-14 h-14 p-1 border border-primary rounded-full flex items-center justify-center mr-5'>
-                      <p className='text-sm'>{c.user?.name}</p>
+              commentList?.map((c) => {
+                const isEditComment = isCommentEditMode.isEditing && isCommentEditMode.id === c.id;
+                return (
+                  <>
+                    <div
+                      key={`${c.id}-${c.created_at}`}
+                      className='w-full flex py-2 justify-between items-center'
+                    >
+                      <div className='w-full flex items-center'>
+                        <div className='w-14 h-14 p-1 border border-primary rounded-full flex items-center justify-center mr-5'>
+                          <p className='text-sm'>{c.user?.name}</p>
+                        </div>
+                        {/* 댓글 수정 input */}
+                        {isEditComment ? (
+                          <input
+                            type='text'
+                            className='border-b-2 border-slate-400 focus:outline-0  w-full focus:border-slate-700 ml-3'
+                            placeholder='댓글 수정...'
+                            value={updateComment}
+                            onFocus={onCommentFocus}
+                            onChange={(e) => {
+                              setUpdateComment(e.target.value);
+                            }}
+                          />
+                        ) : (
+                          <p>{c.content}</p>
+                        )}
+                      </div>
+
+                      {/* 댓글 수정 삭제 더보기 버튼 */}
+                      {c.isMine && !isEditComment && (
+                        <div className='dropdown p-5 cursor-pointer'>
+                          <button tabIndex={0} className='flex flex-col gap-y-0.5 p-5'>
+                            <span className='w-1 h-1 bg-gray-900 border inline-block rounded-full'></span>
+                            <span className='w-1 h-1 bg-gray-900 border inline-block rounded-full'></span>
+                            <span className='w-1 h-1 bg-gray-900 border inline-block rounded-full'></span>
+                          </button>
+                          <ul
+                            tabIndex={0}
+                            className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-36'
+                          >
+                            <li onClick={() => onCommentEditMode(c.id, c.content)}>
+                              <a>수정</a>
+                            </li>
+                            <li onClick={() => onDeleteComment(c.id)}>
+                              <a>삭제</a>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
-                    <p>{c.content}</p>
-                  </div>
-                  {c.isMine && (
-                    <div className='dropdown'>
-                      <label tabIndex={0} className='cursor-pointer flex flex-col gap-y-0.5 w-10'>
-                        <span className='w-1 h-1 bg-gray-900 border inline-block rounded-full'></span>
-                        <span className='w-1 h-1 bg-gray-900 border inline-block rounded-full'></span>
-                        <span className='w-1 h-1 bg-gray-900 border inline-block rounded-full'></span>
-                      </label>
-                      <ul
-                        tabIndex={0}
-                        className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-36'
-                      >
-                        <li>
-                          <a>수정</a>
-                        </li>
-                        <li>
-                          <a>삭제</a>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    {/* 댓글 수정모드 버튼 */}
+                    {isEditComment && (
+                      <div className='text-end'>
+                        <button
+                          className='btn btn-sm rounded-none mr-6 border-none bg-transparent px-6'
+                          onClick={() => {
+                            setIsCommentEditMode({ isEditing: false, id: '' });
+                            setUpdateComment('');
+                          }}
+                        >
+                          취소
+                        </button>
+                        <button
+                          onClick={onSubmitEditComment}
+                          className={`btn btn-sm rounded-none ${
+                            updateComment === '' ? 'bg-slate-100' : 'bg-blue-400'
+                          } border-none px-6`}
+                        >
+                          수정
+                        </button>
+                      </div>
+                    )}
+                  </>
+                );
+              })}
           </ul>
         </div>
       </section>
