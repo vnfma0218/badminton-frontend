@@ -283,10 +283,16 @@ const PostDetailPage = () => {
                             className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-36'
                           >
                             <li onClick={() => onCommentEditMode(c.id, c.content)}>
-                              <a>수정</a>
+                              <div>
+                                <span className='material-icons'>edit</span>
+                                <a>수정</a>
+                              </div>
                             </li>
                             <li onClick={() => onDeleteComment(c.id)}>
-                              <a>삭제</a>
+                              <div>
+                                <span className='material-icons'>delete</span>
+                                <a>삭제</a>
+                              </div>
                             </li>
                           </ul>
                         </div>

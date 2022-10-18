@@ -18,6 +18,7 @@ const PostListPage = () => {
     const fetchPosts = async () => {
       const { postList } = await getAllPost();
       setPostList(postList);
+      setTotalCnt(postList.length);
     };
 
     fetchPosts();
@@ -70,9 +71,10 @@ const PostListPage = () => {
                       {post.comments.length > 0 ? (
                         <div className='indicator relative'>
                           <span className='indicator-item badge indicator-top indicator-end badge-secondary absolute -right-2'>
+                            {/* <span className='material-icons mr-1'>comment</span> */}
                             {post.comments.length}
                           </span>
-                          <span className=''> {`${post.content.slice(0, 50)}...`}</span>
+                          <span> {`${post.content.slice(0, 50)}...`}</span>
                         </div>
                       ) : (
                         <>{`${post.content.slice(0, 50)}...`}</>
