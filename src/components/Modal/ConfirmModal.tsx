@@ -1,5 +1,4 @@
-import { useAppSelector } from '@/store/hooks';
-import { modalState } from '@/store/slices/ModalSlice';
+import ReactDOM from 'react-dom';
 
 interface ConfirmModalProps {
   description: string;
@@ -8,29 +7,31 @@ interface ConfirmModalProps {
 }
 
 const ConfirmModal = ({ title, description, children }: ConfirmModalProps) => {
-  const {
-    confirmModal: { show },
-  } = useAppSelector(modalState);
-
+  const selectedElement = document.getElementById('_modal');
+  if (selectedElement === null) {
+    //null에 대한 에러 처리를 할 수 있다.
+    return <div></div>;
+  }
   return (
     <>
       {/* <label htmlFor='my-modal' className='btn modal-button'>
         open modal
       </label> */}
-
-      <input type='checkbox' id='my-modal' className='modal-toggle' />
-      <div className='modal'>
-        <div className='modal-box'>
-          <h3 className='font-bold text-lg'>{title}</h3>
-          <p className='py-4'>{description}</p>
-          <div className='modal-action'>
-            <label htmlFor='my-modal' className='btn'>
-              취소
-            </label>
-            {children}
+      {ReactDOM.createPortal(
+        <>
+          <div className='modal-box'>
+            <h3 className='font-bold text-lg'>{title}</h3>
+            <p className='py-4'>{description}</p>
+            <div className='modal-action'>
+              <label htmlFor='my-modal' className='btn'>
+                취소
+              </label>
+              {children}
+            </div>
           </div>
-        </div>
-      </div>
+        </>,
+        selectedElement,
+      )}
     </>
   );
 };

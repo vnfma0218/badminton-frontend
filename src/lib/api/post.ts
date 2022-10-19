@@ -33,7 +33,7 @@ export const getPostItem = async (postId: string): Promise<getPostItemResp> => {
 export const deletePostItem = async (
   privateAxios: AxiosInstance,
   postId: string,
-): Promise<Post> => {
+): Promise<Response> => {
   const res = await privateAxios({
     url: `/post/${postId}`,
     method: 'delete',

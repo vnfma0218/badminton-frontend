@@ -72,8 +72,11 @@ const PostDetailPage = () => {
 
   const onClickConfirmDelBtn = async () => {
     try {
-      await deletePostItem(privateAxios, postId);
-      router.replace('/post/all');
+      const res = await deletePostItem(privateAxios, postId);
+      if (res.resultCode === '0000') {
+        dispatch(updateAlertState({ message: '삭제했어요' }));
+        router.replace('/post/all');
+      }
     } catch (err) {}
   };
 
@@ -186,41 +189,46 @@ const PostDetailPage = () => {
       </section>
       <section className='mt-64'>
         {/* 댓글 입력창 */}
-        <div>
-          <div className='flex'>
-            <div className='w-16 h-14 border border-primary rounded-full flex items-center justify-center'>
-              <p className='text-base linehei'>{nickname}</p>
+        {nickname && (
+          <div>
+            <div className='flex'>
+              <div className='w-16 h-14 border border-primary rounded-full flex items-center justify-center'>
+                <p className='text-base linehei'>{nickname}</p>
+              </div>
+              <input
+                type='text'
+                className='border-b-2 border-slate-400 focus:outline-0  w-full focus:border-slate-700 ml-3'
+                placeholder='댓글 추가...'
+                value={addComment}
+                onFocus={onCommentFocus}
+                onChange={(e) => {
+                  setAddComment(e.target.value);
+                }}
+              />
             </div>
-            <input
-              type='text'
-              className='border-b-2 border-slate-400 focus:outline-0  w-full focus:border-slate-700 ml-3'
-              placeholder='댓글 추가...'
-              value={addComment}
-              onFocus={onCommentFocus}
-              onChange={(e) => {
-                setAddComment(e.target.value);
-              }}
-            />
+            {isCommentMode && (
+              <div className='text-end mt-2'>
+                <button
+                  className='btn btn-sm rounded-none mr-6 border-none bg-transparent px-6'
+                  onClick={() => {
+                    setIsCommentMode(false);
+                    setAddComment('');
+                  }}
+                >
+                  취소
+                </button>
+                <button
+                  onClick={onSubmitComment}
+                  className={`btn btn-sm rounded-none ${
+                    addComment === '' ? 'bg-slate-100' : 'bg-blue-400'
+                  } border-none px-6`}
+                >
+                  댓글
+                </button>
+              </div>
+            )}
           </div>
-          {isCommentMode && (
-            <div className='text-end mt-2'>
-              <button
-                className='btn btn-sm rounded-none mr-6 border-none bg-transparent px-6'
-                onClick={() => setIsCommentMode(false)}
-              >
-                취소
-              </button>
-              <button
-                onClick={onSubmitComment}
-                className={`btn btn-sm rounded-none ${
-                  addComment === '' ? 'bg-slate-100' : 'bg-blue-400'
-                } border-none px-6`}
-              >
-                댓글
-              </button>
-            </div>
-          )}
-        </div>
+        )}
 
         <h3 className='mt-12'>comments</h3>
         <div className='mt-3 px-7 py-4'>
@@ -327,7 +335,10 @@ const PostDetailPage = () => {
         </div>
       </section>
       <label htmlFor='my-modal' className='btn modal-button hidden' ref={modalRef}></label>
-      <ConfirmModal description='진행하시겠습니까?' title='해당 글을 삭제합니다'>
+      <ConfirmModal
+        description='해당 글의 댓글 또한 모두 삭제됩니다.'
+        title='해당 글을 삭제할까요?'
+      >
         <button className='btn' onClick={onClickConfirmDelBtn}>
           확인
         </button>

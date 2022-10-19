@@ -31,14 +31,17 @@ const Navigation = () => {
   };
 
   return (
-    <nav className='navbar fixed justify-between w-full z-40 h-20 bg-primary'>
+    <nav className='navbar fixed justify-between w-full z-40 h-20 bg-primary px-14'>
       <div className='page-title'>
         <Link href={'/'}>Home</Link>
       </div>
       <ul className='nav-list'>
-        <li className='mr-5'>
-          <Link href={'/post/new'}>New</Link>
-        </li>
+        {userId && (
+          <li className='mr-5'>
+            <Link href={'/post/new'}>New</Link>
+          </li>
+        )}
+
         <li className='mr-5'>
           <Link href={'/post/all'}>All</Link>
         </li>
