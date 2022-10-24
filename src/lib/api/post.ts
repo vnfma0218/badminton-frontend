@@ -3,8 +3,14 @@ import { publicAxios } from '../axios';
 import { Comment, Post } from '../types';
 import { Response } from './user';
 
+type ResponseData<T> = {
+  resultCode: '0000' | '9999';
+  dataList: T;
+};
+
 export interface getPostListResp {
   postList: Post[];
+  totalCnt: number;
 }
 export interface getPostItemResp {
   post: Post;
@@ -12,13 +18,20 @@ export interface getPostItemResp {
   myPostYn: boolean;
 }
 
-export const getAllPost = async (): Promise<getPostListResp> => {
+export const getAllPost = async (
+  page: number,
+  limit: number,
+): Promise<ResponseData<getPostListResp>> => {
   const res = await publicAxios({
     url: '/post/all',
     method: 'get',
+    params: {
+      page,
+      limit,
+    },
   });
 
-  return { postList: res.data.postList };
+  return res.data;
 };
 
 export const getPostItem = async (postId: string): Promise<getPostItemResp> => {

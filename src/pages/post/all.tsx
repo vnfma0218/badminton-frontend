@@ -4,35 +4,26 @@ import usePrivateAxios from 'src/hooks/usePrivateAxios';
 import ReactPaginate from 'react-paginate';
 import { Post } from 'src/lib/types';
 import styles from '@/styles/Pagination.module.css';
-import { getAllPost } from '@/lib/api/post';
+import { getAllPost, getPostListResp } from '@/lib/api/post';
 import Router from 'next/router';
+import useSWR from 'swr';
 
+const limit = 3;
 const PostListPage = () => {
   const privateAxios = usePrivateAxios();
   const [postList, setPostList] = useState<Post[]>([]);
   const [totalCnt, setTotalCnt] = useState<number>();
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
   const [pageNo, setPageNo] = useState<number>(1);
 
+  const { data, isValidating: loading } = useSWR('/post/all', () => getAllPost(pageNo, limit));
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      const { postList } = await getAllPost();
-      setPostList(postList);
-      setTotalCnt(postList.length);
-    };
-
-    fetchPosts();
-  }, [pageNo]);
-  const onDeletePost = async (postId: string) => {
-    try {
-      const { data } = await privateAxios.delete(`/post/delete/${postId}`);
-
-      if (data.resultCode === '0000') {
-        setPostList((prev) => prev.filter((p) => p.id !== postId));
-      } else if (data.resultCode === '401') {
-      }
-    } catch (error) {}
-  };
+    if (data?.resultCode === '0000' && data.dataList) {
+      setPostList(data.dataList.postList);
+      setTotalCnt(data.dataList.totalCnt);
+    }
+  }, [data]);
 
   const handlePageClick = (event: any) => {
     setPageNo(event.selected + 1);
@@ -91,7 +82,7 @@ const PostListPage = () => {
             <div className='mt-10'>
               <ReactPaginate
                 className='justify-center'
-                pageCount={Math.ceil(totalCnt / 10)}
+                pageCount={Math.ceil(totalCnt / 3)}
                 onPageChange={handlePageClick}
               />
             </div>

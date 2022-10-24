@@ -7,10 +7,13 @@ interface ConfirmModalProps {
 }
 
 const ConfirmModal = ({ title, description, children }: ConfirmModalProps) => {
-  const selectedElement = document.getElementById('_modal');
-  if (selectedElement === null) {
-    //null에 대한 에러 처리를 할 수 있다.
-    return <div></div>;
+  let selectedElement = null;
+  if (document) {
+    selectedElement = document?.getElementById('_modal');
+    if (selectedElement === null) {
+      //null에 대한 에러 처리를 할 수 있다.
+      return <div></div>;
+    }
   }
   return (
     <>
