@@ -11,9 +11,8 @@ export default function Document() {
       </Head>
       <body className='font-Noto'>
         <Main />
-        <input type='checkbox' id='my-modal' className='modal-toggle' />
-        <div id='_modal' className='modal'></div>
         <NextScript />
+        <div id='_modal' className='modal'></div>
       </body>
     </Html>
   );

@@ -1,31 +1,32 @@
 import { useEffect, useState } from 'react';
 import classnames from 'classnames';
-import usePrivateAxios from 'src/hooks/usePrivateAxios';
 import ReactPaginate from 'react-paginate';
 import { Post } from 'src/lib/types';
 import styles from '@/styles/Pagination.module.css';
-import { getAllPost, getPostListResp } from '@/lib/api/post';
+import { getAllPost } from '@/lib/api/post';
 import Router from 'next/router';
 import useSWR from 'swr';
 
-const limit = 3;
+const limit = 6;
 const PostListPage = () => {
-  const privateAxios = usePrivateAxios();
   const [postList, setPostList] = useState<Post[]>([]);
   const [totalCnt, setTotalCnt] = useState<number>();
   // const [loading, setLoading] = useState<boolean>(false);
   const [pageNo, setPageNo] = useState<number>(1);
 
-  const { data, isValidating: loading } = useSWR('/post/all', () => getAllPost(pageNo, limit));
+  const { data, isValidating: loading } = useSWR(['/post/all', pageNo], () =>
+    getAllPost(pageNo, limit),
+  );
 
   useEffect(() => {
     if (data?.resultCode === '0000' && data.dataList) {
       setPostList(data.dataList.postList);
-      setTotalCnt(data.dataList.totalCnt);
+      setTotalCnt(Math.ceil(data.dataList.totalCnt / limit));
     }
   }, [data]);
 
   const handlePageClick = (event: any) => {
+    console.log('event.selected', event.selected);
     setPageNo(event.selected + 1);
   };
 
@@ -33,11 +34,15 @@ const PostListPage = () => {
     Router.push(`/post/${id}`);
   };
 
-  if (loading) return <div>loading...</div>;
   return (
     <>
-      {!loading && (
-        <div className={classnames('issuesPagination overflow-x-auto mt-20', styles.pagination)}>
+      <div
+        className={classnames(
+          'issuesPagination overflow-x-auto scroll mt-20 h-screen scrollbar-hide overflow-y-hidden',
+          styles.pagination,
+        )}
+      >
+        <div>
           <table className='table table-compact w-full'>
             <thead>
               <tr>
@@ -51,14 +56,14 @@ const PostListPage = () => {
               {postList.map((post, idx) => {
                 return (
                   <tr
-                    className='hover cursor-pointer'
+                    className='hover cursor-pointer h-14'
                     key={post.id}
                     onClick={() => onClickPostItem(post.id)}
                   >
                     <th>{idx + 1}</th>
                     <td>{post.title}</td>
 
-                    <td>
+                    <td className=''>
                       {post.comments.length > 0 ? (
                         <div className='indicator relative'>
                           <span className='indicator-item badge indicator-top indicator-end badge-secondary absolute -right-2'>
@@ -77,18 +82,11 @@ const PostListPage = () => {
               })}
             </tbody>
           </table>
-
-          {totalCnt && (
-            <div className='mt-10'>
-              <ReactPaginate
-                className='justify-center'
-                pageCount={Math.ceil(totalCnt / 3)}
-                onPageChange={handlePageClick}
-              />
-            </div>
-          )}
         </div>
-      )}
+        <div className='mt-10 absolute bottom-28 ml-auto mr-auto left-0 right-0 text-center'>
+          <ReactPaginate pageCount={totalCnt ?? 0} onPageChange={handlePageClick} />
+        </div>
+      </div>
     </>
   );
 };

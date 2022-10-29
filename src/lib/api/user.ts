@@ -1,4 +1,5 @@
 import { privateAxios, publicAxios } from '../axios';
+import { ResponseData } from './post';
 
 type RequestLogin = {
   email: string;
@@ -15,6 +16,12 @@ interface LoginResp extends Response {
   accessToken: string;
   nickname: string;
 }
+
+export type Notification = {
+  content: string;
+  from: string;
+  created_at: string;
+};
 
 export const login = async (data: RequestLogin): Promise<LoginResp> => {
   const res = await publicAxios({
@@ -45,4 +52,18 @@ export const logout = async (accessToken: string): Promise<Response> => {
     resultCode: res.data.resultCode,
     message: res.data.message,
   };
+};
+
+export const getUserNotification = async (
+  accessToken: string,
+): Promise<ResponseData<{ notiList: Notification[] }>> => {
+  const res = await privateAxios({
+    url: '/noti/all',
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return res.data;
 };

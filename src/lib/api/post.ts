@@ -3,7 +3,7 @@ import { publicAxios } from '../axios';
 import { Comment, Post } from '../types';
 import { Response } from './user';
 
-type ResponseData<T> = {
+export type ResponseData<T> = {
   resultCode: '0000' | '9999';
   dataList: T;
 };
