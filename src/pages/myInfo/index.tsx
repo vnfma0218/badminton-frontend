@@ -1,24 +1,32 @@
 import { useAppSelector } from '@/store/hooks';
 import { authState } from '@/store/slices/authSlice';
+import { useRouter } from 'next/router';
 
 const MyInfoPage = () => {
   const { nickname } = useAppSelector(authState);
-
+  const router = useRouter();
   return (
     <div className='mt-32 flex'>
       {/* 프로필 카드 */}
-      <div className='card w-96 bg-base-100 shadow-xl pt-11'>
+      <div className='card w-96 bg-base-100 shadow-xl py-11'>
         <div>
           <div className='w-24 h-24 rounded-full bg-slate-600 flex justify-center m-auto'></div>
-          <p className='mt-3 text-sm font-bold text-center underline cursor-pointer'>
-            사진 업데이트
-          </p>
         </div>
         <div className='card-body items-center text-center'>
           <h2 className='card-title'>{nickname}</h2>
           <p className='mt-4'>
             내 소개글입니다 .... 내 소개글입니다 .... 내 소개글입니다 .... 내 소개글입니다 ....
           </p>
+        </div>
+        <div className='text-center'>
+          <button
+            className='btn'
+            onClick={() => {
+              router.push('/myInfo/edit');
+            }}
+          >
+            Edit Profile
+          </button>
         </div>
       </div>
       {/* 회원 클럽정보 */}
