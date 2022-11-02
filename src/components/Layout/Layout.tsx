@@ -14,8 +14,6 @@ const Layout = ({ children }: LayoutProps) => {
     <div data-theme='pastel' className='h-screen'>
       {children}
       {show && <ToastModal />}
-
-      {/* <ToastModal /> */}
     </div>
   );
 };

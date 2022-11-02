@@ -13,10 +13,17 @@ const ToastModal = () => {
   }, []);
 
   return (
-    <div className='toast toast-center toast-bottom w-52 mb-40 '>
-      <div className={`alert alert-${'primary'} bg-primary w-full`}>
+    // <div className='toast toast-top toast-center'>
+    //   <div className={`alert alert-${'primary'} bg-primary `}>
+    //     <div>
+    //       <span>{message}</span>
+    //     </div>
+    //   </div>
+    // </div>
+    <div className='toast toast-top toast-end mt-24'>
+      <div className='alert alert-success'>
         <div>
-          <div>{message}</div>
+          <span>{message}</span>
         </div>
       </div>
     </div>

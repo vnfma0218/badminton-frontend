@@ -1,6 +1,7 @@
+import Map from '@/components/Map/Map';
 import { useAppSelector } from '@/store/hooks';
 import { authState } from '@/store/slices/authSlice';
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 type Profile = {
@@ -19,22 +20,23 @@ const ProfileEditPage = () => {
     register,
     handleSubmit,
     watch,
+    getValues,
+    setValue,
     formState: { errors },
   } = useForm<Profile>();
-  const { ref, ...rest } = register('profileFile');
   const avatar = watch('profileFile');
 
   useEffect(() => {
     if (avatar && avatar.length > 0) {
       const file = avatar[0];
-      console.log();
+      console.log(file);
       setAvatarPreview(URL.createObjectURL(file));
     }
   }, [avatar]);
-  const fileRef = useRef<HTMLInputElement>(null);
 
-  const onFileClick = () => {
-    fileRef.current?.click();
+  const onClearFile = () => {
+    setAvatarPreview('');
+    setValue('profileFile', []);
   };
 
   console.log(watch());
@@ -43,17 +45,36 @@ const ProfileEditPage = () => {
     <div className='mt-32 flex'>
       {/* 유저 프로필 정보 */}
       <div className='card w-96 bg-base-100 shadow-xl py-11'>
-        <div className='flex justify-center'>
-          <span className='border w-36 h-36 rounded-full cursor-pointer' onClick={onFileClick}>
-            <img src={avatarPreview} alt='' className='w-full h-full rounded-full' />
-          </span>
-          <input type='file' ref={fileRef} hidden {...rest} />
-          {/* <input type='file' {...register('profileFile')} /> */}
+        <div className='flex justify-center relative'>
+          <label
+            htmlFor='profile'
+            className={`w-36 h-36 rounded-full cursor-pointer ${!avatarPreview && 'border'}`}
+          >
+            {avatarPreview ? (
+              <img
+                src={avatarPreview}
+                alt='프로필 파일 업로드'
+                className='w-full h-full rounded-full'
+              />
+            ) : (
+              <p className='px-5 mt-7'>프로필 업로드 해주세요</p>
+            )}
+          </label>
+          <input type='file' {...register('profileFile')} id='profile' className='hidden' />
+          {getValues('profileFile')?.length > 0 && (
+            <button
+              onClick={onClearFile}
+              className='absolute right-32 border rounded-full w-7 text-xs h-7 bg-secondary text-slate-700'
+            >
+              취소
+            </button>
+          )}
         </div>
         <div className='text-center mt-8'>
           <input
             type='text'
             className='input input-primary h-8'
+            placeholder='닉네임'
             {...register('nickname', {
               minLength: {
                 value: 2,
@@ -67,6 +88,7 @@ const ProfileEditPage = () => {
         <div className='text-center mt-8'>
           <textarea
             className='input input-primary h-20 text-xs w-4/5'
+            placeholder='소개글'
             {...register('intro', {
               minLength: {
                 value: 2,
@@ -81,10 +103,11 @@ const ProfileEditPage = () => {
       {/* 유저 배드민턴 정보 */}
       <div className='ml-24'>
         <div>
-          <h3 className='text-2xl'>소속 클럽</h3>
-          <p>목감 클럽</p>
+          <h3 className='text-xl pb-1 px-2'>소속 클럽</h3>
+          <button className='btn mt-4'>클럽 검색하기 </button>
         </div>
       </div>
+      <Map />
     </div>
   );
 };
