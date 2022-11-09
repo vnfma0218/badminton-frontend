@@ -1,31 +1,30 @@
-import { publicAxios } from '@/lib/axios'
-import { useRouter } from 'next/router'
-import { FormEvent } from 'react'
-import { useForm } from 'react-hook-form'
-import { useAppDispatch } from 'src/store/hooks'
-import { updateAuthState } from 'src/store/slices/authSlice'
+import { publicAxios } from '@/lib/axios';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { useAppDispatch } from 'src/store/hooks';
+import { updateAuthState } from 'src/store/slices/authSlice';
 
 export type AuthInputs = {
-  nickname: string
-  email: string
-  password: string
-  passwordConfirm: string
-}
+  nickname: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+};
 
 const LoginPage = () => {
-  const router = useRouter()
-  const dispatch = useAppDispatch()
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const {
     register,
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<AuthInputs>()
+  } = useForm<AuthInputs>();
 
   const onSubmitLogin = async (data: AuthInputs) => {
-    console.log(data)
-    console.log('submit')
+    console.log(data);
+    console.log('submit');
     const res = await publicAxios({
       url: '/login',
       method: 'post',
@@ -34,16 +33,16 @@ const LoginPage = () => {
         password: 'tkfkdgo1!',
       },
       withCredentials: true,
-    })
+    });
 
     if (res.status === 200) {
-      const { userId, accessToken } = res.data
-      console.log('login succes', userId, accessToken)
-      dispatch(updateAuthState({ userId, accessToken }))
-      router.replace('/')
+      const { userId, accessToken } = res.data;
+      console.log('login succes', userId, accessToken);
+      dispatch(updateAuthState({ userId, accessToken }));
+      router.replace('/');
     }
-  }
-  console.log(watch(), errors)
+  };
+  console.log(watch(), errors);
   return (
     <div className=' m-auto p-8 border-solid border-2 border-slate-500 rounded-md'>
       <h1 className='pb-10 text-4xl'>Login</h1>
@@ -111,7 +110,7 @@ const LoginPage = () => {
         <button className='btn btn-primary'>회원가입</button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

@@ -23,6 +23,12 @@ a {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 /* .navbar {
   width: 100%;
   background: blanchedalmond;

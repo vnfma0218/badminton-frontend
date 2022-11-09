@@ -1,7 +1,8 @@
-import Map from '@/components/Map/Map';
+import Address from '@/components/Kakao/Address';
+import Map from '@/components/Kakao/Map';
 import { useAppSelector } from '@/store/hooks';
 import { authState } from '@/store/slices/authSlice';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 type Profile = {

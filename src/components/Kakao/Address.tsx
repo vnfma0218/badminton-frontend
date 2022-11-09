@@ -4,7 +4,18 @@ declare global {
     daum: any;
   }
 }
-const Address = () => {
+
+export type addrInfo = {
+  roadAddress: string;
+  jibunAddress: string;
+  zonecode: string;
+};
+
+interface AddressProps {
+  onSuccessAddr: (addrInfo: addrInfo) => void;
+}
+
+const Address = ({ onSuccessAddr }: AddressProps) => {
   const onClickAddrerss = () => {
     new window.daum.Postcode({
       oncomplete: function (data: any) {
@@ -12,9 +23,16 @@ const Address = () => {
 
         // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
         // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-        var roadAddr = data.roadAddress; // 도로명 주소 변수
+        const roadAddress = data.roadAddress;
+        const jibunAddress = data.jibunAddress;
+        const zonecode = data.zonecode;
+        const addrInfo = {
+          zonecode,
+          jibunAddress,
+          roadAddress,
+        };
+        onSuccessAddr(addrInfo);
         var extraRoadAddr = ''; // 참고 항목 변수
-        console.log(roadAddr);
         // 법정동명이 있을 경우 추가한다. (법정리는 제외)
         // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
         if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
@@ -35,7 +53,7 @@ const Address = () => {
     <>
       <Script src='//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js' />
       <button onClick={onClickAddrerss} className='btn'>
-        주소 검색하기
+        주소 입력
       </button>
     </>
   );
