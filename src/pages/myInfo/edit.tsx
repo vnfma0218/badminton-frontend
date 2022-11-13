@@ -1,5 +1,4 @@
-import Address from '@/components/Kakao/Address';
-import Map from '@/components/Kakao/Map';
+import KaKaoMap from '@/components/Kakao/KaKaoMap';
 import { useAppSelector } from '@/store/hooks';
 import { authState } from '@/store/slices/authSlice';
 import { useEffect, useState } from 'react';
@@ -108,7 +107,7 @@ const ProfileEditPage = () => {
           <button className='btn mt-4'>클럽 검색하기 </button>
         </div>
       </div>
-      <Map />
+      <KaKaoMap />
     </div>
   );
 };
