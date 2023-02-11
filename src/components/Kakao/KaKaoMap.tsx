@@ -10,13 +10,12 @@ declare global {
 }
 
 interface IKaKaoMap {
-  onShowAddr?: (addrInfo: { load: string; jibun: string }) => void;
+  onChangeAddress: (addrInfo: { loadAddress?: string; jibun?: string }) => void;
 }
-const KaKaoMap = ({ onShowAddr }: IKaKaoMap) => {
+const KaKaoMap = ({ onChangeAddress }: IKaKaoMap) => {
   const [loading, setLoading] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number }>();
   const [position, setPosition] = useState<{ lat: number; lng: number }>();
-  const [clubAddr, setClubAddr] = useState({ load: '', jibun: '' });
 
   useEffect(() => {
     const getUserLocation = async () => {
@@ -28,7 +27,6 @@ const KaKaoMap = ({ onShowAddr }: IKaKaoMap) => {
         lng: !result.longitude ? 126.79581 : result.longitude,
       });
       setLoading(false);
-      console.log(result.latitude, result.longitude);
     };
     getUserLocation();
   }, []);
@@ -39,10 +37,24 @@ const KaKaoMap = ({ onShowAddr }: IKaKaoMap) => {
         <Map
           center={{ lat: userLocation?.lat!, lng: userLocation?.lng! }}
           style={{ width: '100%', height: '360px' }}
+          onClick={(_t, mouseEvent) => {
+            const geocoder = new kakao.maps.services.Geocoder();
+            const lat = mouseEvent.latLng.getLat();
+            const lng = mouseEvent.latLng.getLng();
+            setPosition({
+              lat,
+              lng,
+            });
+            geocoder.coord2Address(lng, lat, (result, status) => {
+              console.log(result);
+              const loadAddress = result[0].road_address?.address_name;
+              const jibun = result[0].address?.address_name;
+              console.log(status);
+              onChangeAddress({ loadAddress, jibun });
+            });
+          }}
         >
-          <MapMarker position={{ lat: 33.55635, lng: 126.795841 }}>
-            <div style={{ color: '#000' }}>Hello World!</div>
-          </MapMarker>
+          {position && <MapMarker position={position} />}
         </Map>
       ) : (
         <Loading />
