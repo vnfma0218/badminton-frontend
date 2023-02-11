@@ -1,7 +1,9 @@
 import KaKaoMap from '@/components/Kakao/KaKaoMap';
+import MapModal from '@/components/myInfo/MapModal';
+import Loading from '@/components/UIElement/Loading';
 import { useAppSelector } from '@/store/hooks';
 import { authState } from '@/store/slices/authSlice';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 type Profile = {
@@ -15,6 +17,8 @@ type Profile = {
 
 const ProfileEditPage = () => {
   const { nickname } = useAppSelector(authState);
+  const [showMap, setShowMap] = useState(false);
+  const modalRef = useRef(null);
   const [avatarPreview, setAvatarPreview] = useState('');
   const {
     register,
@@ -37,6 +41,14 @@ const ProfileEditPage = () => {
   const onClearFile = () => {
     setAvatarPreview('');
     setValue('profileFile', []);
+  };
+
+  const onShowAddr = (addrInfo: { load: string; jibun: string }) => {
+    console.log(addrInfo);
+  };
+  const showMapModal = () => {
+    setShowMap(true);
+    (modalRef.current as any).click();
   };
 
   console.log(watch());
@@ -104,10 +116,15 @@ const ProfileEditPage = () => {
       <div className='ml-24'>
         <div>
           <h3 className='text-xl pb-1 px-2'>소속 클럽</h3>
-          <button className='btn mt-4'>클럽 검색하기 </button>
+          <button className='btn mt-4' onClick={showMapModal}>
+            클럽 검색하기
+          </button>
+          <label htmlFor='map-modal' ref={modalRef}></label>
         </div>
       </div>
-      <KaKaoMap />
+      {showMap ? <MapModal /> : null}
+
+      {/* <KaKaoMap onShowAddr={onShowAddr} /> */}
     </div>
   );
 };

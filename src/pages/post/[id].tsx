@@ -13,8 +13,9 @@ import { useForm } from 'react-hook-form';
 import { PostInputs } from './new';
 
 const PostDetailPage = () => {
-  const { register, handleSubmit } = useForm<PostInputs>();
+  const { register, handleSubmit, getValues } = useForm<PostInputs>();
   const { nickname } = useAppSelector(authState);
+  const editModalRef = useRef(null);
 
   const dispatch = useAppDispatch();
   const privateAxios = usePrivateAxios();
@@ -38,7 +39,6 @@ const PostDetailPage = () => {
     try {
       const res = await getPostItem(postId);
       setPost(res.post);
-      console.log(res.post);
       setCommentList(res.comments);
     } catch (error) {}
   };
@@ -52,23 +52,27 @@ const PostDetailPage = () => {
     setIsEditMode((prev) => !prev);
   };
 
-  const onPostSubmit = async (data: PostInputs) => {
+  const onPostSubmit = async () => {
     if (!isEditMode) {
       // 삭제 확인 모달
       setModalOpen(true);
     }
     if (isEditMode) {
       //수정 하기 제출
-      const { content, title } = data;
-      try {
-        const res = await updatePostItem(privateAxios, { postId, content, title });
-        if (res.resultCode === '0000') {
-          dispatch(updateAlertState({ message: '수정했어요' }));
-          setIsEditMode(false);
-          fetchPostItem();
-        }
-      } catch (error) {}
+      (editModalRef.current as any)!.click();
     }
+  };
+
+  const onSavePost = async () => {
+    const { content, title } = getValues();
+    try {
+      const res = await updatePostItem(privateAxios, { postId, content, title });
+      if (res.resultCode === '0000') {
+        dispatch(updateAlertState({ message: '수정했어요' }));
+        setIsEditMode(false);
+        fetchPostItem();
+      }
+    } catch (error) {}
   };
 
   const onClickConfirmDelBtn = async () => {
@@ -186,6 +190,7 @@ const PostDetailPage = () => {
               <button className='btn btn-primary px-9' onClick={handleSubmit(onPostSubmit)}>
                 {isEditMode ? '제출' : '삭제'}
               </button>
+              <label htmlFor='my-modal' className='hidden' ref={editModalRef}></label>
             </div>
           )}
         </section>
@@ -244,13 +249,14 @@ const PostDetailPage = () => {
               )}
               {post &&
                 post?.comments?.length > 0 &&
-                post.comments?.map((c) => {
+                post.comments?.map((c, index) => {
+                  console.log(c.id);
                   const isEditComment =
                     isCommentEditMode.isEditing && isCommentEditMode.id === c.id;
                   return (
                     <>
                       <div
-                        key={`${c.id}-${c.created_at}`}
+                        key={`${c.id}-${index}`}
                         className='w-full flex py-2 justify-between items-center'
                       >
                         <div className='w-full flex items-center'>
@@ -330,6 +336,23 @@ const PostDetailPage = () => {
             </ul>
           </div>
         </section>
+
+        {/* Put this part before </body> tag */}
+        <input type='checkbox' id='my-modal' className='modal-toggle' />
+        <div className='modal'>
+          <div className='modal-box'>
+            <h3 className='font-bold text-lg'>수정하시겠습니까?</h3>
+
+            <div className='modal-action'>
+              <label htmlFor='my-modal' className='btn'>
+                취소
+              </label>
+              <label htmlFor='my-modal' className='btn' onClick={onSavePost}>
+                확인
+              </label>
+            </div>
+          </div>
+        </div>
 
         {modalOpen && (
           <ConfirmModal

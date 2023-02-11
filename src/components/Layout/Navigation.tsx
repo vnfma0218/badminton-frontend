@@ -35,7 +35,7 @@ const Navigation = () => {
       dispatch(clearAuthState());
     }
   };
-  console.log(data?.dataList);
+  // console.log(data?.dataList);
 
   const onNotiClick = () => {
     setNotiOpen(true);

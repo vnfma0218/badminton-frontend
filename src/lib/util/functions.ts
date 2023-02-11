@@ -1,5 +1,3 @@
-import { LargeNumberLike } from 'crypto';
-
 export function getLocation(): Promise<{
   latitude: number;
   longitude: number;
@@ -11,6 +9,7 @@ export function getLocation(): Promise<{
       const now = new Date();
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log('position', position);
           resolve({
             err: 0,
             time: now.toLocaleTimeString(),
@@ -21,8 +20,8 @@ export function getLocation(): Promise<{
         (err) => {
           resolve({
             err: -1,
-            latitude: -1,
-            longitude: -1,
+            latitude: 0,
+            longitude: 0,
           });
         },
         { enableHighAccuracy: true, maximumAge: 2000, timeout: 5000 },
