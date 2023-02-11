@@ -1,11 +1,18 @@
-import { useState } from 'react';
-import KaKaoMap from '../Kakao/KaKaoMap';
+import { useRef, useState } from 'react';
+import KaKaoMap, { AddressInfo } from '../Kakao/KaKaoMap';
+import PostClubModal from './PostClubModal';
 
 const MapModal = () => {
-  const [position, setPosition] = useState<{ loadAddress: string; jibun: string }>();
+  const postModalRef = useRef(null);
+  const [position, setPosition] = useState<AddressInfo>();
 
-  const onChangeAddress = (addrInfo: { loadAddress?: string; jibun?: string }) => {
-    setPosition({ loadAddress: addrInfo.loadAddress ?? '', jibun: addrInfo.jibun ?? '' });
+  const onChangeAddress = (addrInfo: AddressInfo) => {
+    setPosition({
+      loadAddress: addrInfo.loadAddress ?? '',
+      jibun: addrInfo.jibun ?? '',
+      lat: addrInfo.lat,
+      lng: addrInfo.lng,
+    });
   };
   return (
     <>
@@ -28,12 +35,13 @@ const MapModal = () => {
             <label htmlFor='map-modal' className='btn'>
               취소
             </label>
-            <label htmlFor='map-modal' className='btn'>
+            <label htmlFor='post-club-modal' className='btn'>
               확인
             </label>
           </div>
         </div>
       </div>
+      {position ? <PostClubModal addrInfo={position} /> : null}
     </>
   );
 };
