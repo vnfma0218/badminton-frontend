@@ -1,8 +1,8 @@
+import { AddressInfo } from '@/components/Kakao/KaKaoMap';
+import AlertModal from '@/components/Modal/AlertModal';
 import usePrivateAxios from '@/hooks/usePrivateAxios';
 import { postClub } from '@/lib/api/club';
 import { useRef, useState } from 'react';
-import { AddressInfo } from '../Kakao/KaKaoMap';
-import AlertModal from '../Modal/AlertModal';
 
 interface PostClubModalProps {
   addrInfo: AddressInfo;

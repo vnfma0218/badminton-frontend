@@ -1,9 +1,10 @@
+import KaKaoMap, { AddressInfo } from '@/components/Kakao/KaKaoMap';
 import { getNearClubList } from '@/lib/api/club';
 import { Club } from '@/lib/types';
 import { getLocation } from '@/lib/util/functions';
 import { useEffect, useRef, useState } from 'react';
-import KaKaoMap, { AddressInfo } from '../Kakao/KaKaoMap';
 import PostClubModal from './PostClubModal';
+import SearchClubListModal from './SearchClubListModal';
 
 interface ClubListModalProps {
   onCancelModal: () => void;
@@ -15,10 +16,12 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
     lng: 126.79581,
   });
   const postModalRef = useRef(null);
+  const searchModalRef = useRef(null);
   const [clubList, setClubList] = useState<Club[]>([]);
   const [clickedPosition, setClickedPosition] = useState<AddressInfo>();
   const [centerPosition, setCenterPosition] = useState<{ lat: number; lng: number }>();
   const [resetClickedPosition, setResetClickedPosition] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
 
   useEffect(() => {
     const getUserLocation = async () => {
@@ -38,6 +41,12 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
     };
     getUserLocation();
   }, []);
+
+  useEffect(() => {
+    if (showSearchModal) {
+      (searchModalRef.current as any).click();
+    }
+  }, [showSearchModal]);
 
   const onClickMap = (addrInfo: AddressInfo) => {
     setClickedPosition({
@@ -72,7 +81,6 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
   };
 
   const onClickPostClub = () => {
-    console.log('click');
     (postModalRef.current as any).click();
   };
 
@@ -87,6 +95,10 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
     // reset user position to current positiion
   };
 
+  const onShowSearchModal = () => {
+    setShowSearchModal(true);
+  };
+
   return (
     <>
       <input type='checkbox' id='map-modal' className='modal-toggle' />
@@ -98,6 +110,8 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
               type='text'
               className='input input-primary h-5 text-xs'
               placeholder='클럽명 검색'
+              onClick={onShowSearchModal}
+              // disabled
             />
           </div>
 
@@ -115,10 +129,7 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
             <div>
               <button
                 onClick={() => fetchNearClubList()}
-                className='btn absolute px-6 text-xs bg-black text-white border-white bottom-20
-        left-[35%]
-        z-10
-          '
+                className='btn absolute px-6 text-xs bg-black text-white border-white bottom-20 left-[35%] z-10'
               >
                 현위치에서 재검색
               </button>
@@ -144,6 +155,15 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
       {clickedPosition ? (
         <PostClubModal addrInfo={clickedPosition} onSuccessPostCb={onPostSuccessPostCb} />
       ) : null}
+
+      {showSearchModal ? (
+        <SearchClubListModal
+          onCancelSearchModal={() => {
+            setShowSearchModal(false);
+          }}
+        />
+      ) : null}
+      <label htmlFor='search-club-modal' ref={searchModalRef} />
     </>
   );
 };

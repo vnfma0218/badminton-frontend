@@ -1,5 +1,5 @@
 import KaKaoMap from '@/components/Kakao/KaKaoMap';
-import ClubListModal from '@/components/myInfo/ClubListModal';
+import ClubListModal from '@/components/myInfo/modals/ClubListModal';
 import Loading from '@/components/UIElement/Loading';
 import { useAppSelector } from '@/store/hooks';
 import { authState } from '@/store/slices/authSlice';
