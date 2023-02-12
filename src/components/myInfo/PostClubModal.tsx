@@ -1,21 +1,40 @@
 import usePrivateAxios from '@/hooks/usePrivateAxios';
 import { postClub } from '@/lib/api/club';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AddressInfo } from '../Kakao/KaKaoMap';
 import AlertModal from '../Modal/AlertModal';
 
 interface PostClubModalProps {
   addrInfo: AddressInfo;
+  onSuccessPostCb: () => void;
 }
 
-const PostClubModal = ({ addrInfo }: PostClubModalProps) => {
+const PostClubModal = ({ addrInfo, onSuccessPostCb }: PostClubModalProps) => {
   const privateAxios = usePrivateAxios();
+  const alertRef = useRef(null);
+  const postModalRef = useRef(null);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [confirmCbFunction, setConfirmCbFunction] = useState<() => void>();
 
   const [clubNm, setClubNm] = useState('');
   const saveClub = async () => {
     const res = await postClub(privateAxios, { ...addrInfo, name: clubNm });
-    console.log(res);
+    console.log('saveClub');
+    if (res.resultCode === '0000') {
+      setAlertTitle('클럽이 등록되었습니다');
+      setConfirmCbFunction(undefined);
+      (alertRef.current as any).click();
+      (postModalRef.current as any).click();
+      onSuccessPostCb();
+    }
   };
+
+  const onSaveBtnClick = () => {
+    setAlertTitle('클럽을 등록하시겠습니까?');
+    setConfirmCbFunction(() => saveClub);
+    (alertRef.current as any).click();
+  };
+
   return (
     <>
       <input type='checkbox' id='post-club-modal' className='modal-toggle' />
@@ -44,21 +63,17 @@ const PostClubModal = ({ addrInfo }: PostClubModalProps) => {
             <div className='divider'></div>
           </div>
           <div className='modal-action'>
-            <label htmlFor='post-club-modal' className='btn'>
+            <label ref={postModalRef} htmlFor='post-club-modal' className='btn'>
               취소
             </label>
-            <label htmlFor='alert-modal' className='btn'>
+            <label className='btn' onClick={onSaveBtnClick}>
               확인
             </label>
+            <label ref={alertRef} htmlFor='alert-modal' className='hidden'></label>
           </div>
         </div>
       </div>
-      <AlertModal
-        title={'클럽을 등록하시겠습니까?'}
-        confirmCbFn={() => {
-          saveClub();
-        }}
-      />
+      <AlertModal title={alertTitle} confirmCbFn={confirmCbFunction && confirmCbFunction} />
     </>
   );
 };

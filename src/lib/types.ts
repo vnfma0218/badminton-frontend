@@ -20,3 +20,15 @@ export type Comment = {
   user: User;
   isMine: boolean;
 };
+
+export type Club = {
+  _id: string;
+  address: {
+    jibun: string;
+    loadAddress: string;
+  };
+  location: {
+    coordinates: [number, number];
+  };
+  name: string;
+};

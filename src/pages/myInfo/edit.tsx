@@ -1,5 +1,5 @@
 import KaKaoMap from '@/components/Kakao/KaKaoMap';
-import MapModal from '@/components/myInfo/MapModal';
+import ClubListModal from '@/components/myInfo/ClubListModal';
 import Loading from '@/components/UIElement/Loading';
 import { useAppSelector } from '@/store/hooks';
 import { authState } from '@/store/slices/authSlice';
@@ -48,7 +48,12 @@ const ProfileEditPage = () => {
   };
   const showMapModal = () => {
     setShowMap(true);
-    (modalRef.current as any).click();
+    setTimeout(() => {
+      (modalRef.current as any).click();
+    }, 100);
+  };
+  const onCancelModal = () => {
+    setShowMap(false);
   };
 
   console.log(watch());
@@ -119,10 +124,10 @@ const ProfileEditPage = () => {
           <button className='btn mt-4' onClick={showMapModal}>
             클럽 검색하기
           </button>
-          <label htmlFor='map-modal' ref={modalRef}></label>
+          {showMap ? <label htmlFor='map-modal' ref={modalRef}></label> : null}
         </div>
       </div>
-      {showMap ? <MapModal /> : null}
+      {showMap ? <ClubListModal onCancelModal={onCancelModal} /> : null}
 
       {/* <KaKaoMap onShowAddr={onShowAddr} /> */}
     </div>

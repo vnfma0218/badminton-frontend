@@ -1,6 +1,6 @@
 interface AlertModalProps {
   title: String;
-  confirmCbFn: () => void;
+  confirmCbFn?: () => void;
 }
 
 const AlertModal = ({ title, confirmCbFn }: AlertModalProps) => {
@@ -15,7 +15,13 @@ const AlertModal = ({ title, confirmCbFn }: AlertModalProps) => {
             <label htmlFor='alert-modal' className='btn'>
               취소
             </label>
-            <label htmlFor='alert-modal' className='btn' onClick={confirmCbFn}>
+            <label
+              htmlFor='alert-modal'
+              className='btn'
+              onClick={() => {
+                confirmCbFn && confirmCbFn();
+              }}
+            >
               확인
             </label>
           </div>
