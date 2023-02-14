@@ -39,43 +39,32 @@ const KaKaoMap = ({
   clubList,
   resetClickedPosition,
 }: IKaKaoMap) => {
+  const [center, setCenter] = useState({
+    lat: 33.452613,
+    lng: 126.570888,
+  });
   const [loading, setLoading] = useState(false);
   // const [userLocation, setUserLocation] = useState<{ lat: number; lng: number }>();
   const [position, setPosition] = useState<{ lat: number; lng: number }>();
 
   useEffect(() => {
-    const getUserLocation = async () => {
-      setLoading(true);
-      // const result = await getLocation();
-      // onChangeMapCenter({
-      //   coordinates: [
-      //     !result.latitude ? 33.5563 : result.latitude,
-      //     !result.longitude ? 126.79581 : result.longitude,
-      //   ],
-      //   firstFlag: true,
-      // });
-
-      // setUserLocation({
-      //   lat: !result.latitude ? 33.5563 : result.latitude,
-      //   lng: !result.longitude ? 126.79581 : result.longitude,
-      // });
-      setLoading(false);
-    };
-    getUserLocation();
-  }, []);
+    setCenter((prev) => {
+      return { ...prev, ...{ lat: userLocation.lat, lng: userLocation.lng } };
+    });
+  }, [userLocation]);
 
   useEffect(() => {
     if (resetClickedPosition) {
       setPosition(undefined);
     }
   }, [resetClickedPosition]);
-
   return (
     <>
       {!loading ? (
         <Map
-          center={{ lat: userLocation?.lat!, lng: userLocation?.lng! }}
+          center={center}
           level={5}
+          isPanto={true}
           style={{ width: '100%', height: '360px' }}
           onClick={(_t, mouseEvent) => {
             const geocoder = new kakao.maps.services.Geocoder();

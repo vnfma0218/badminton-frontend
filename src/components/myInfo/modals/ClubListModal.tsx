@@ -93,12 +93,27 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
   const resetUserPosition = () => {
     // todo
     // reset user position to current positiion
+    // setUserLocation({ lat });
   };
 
   const onShowSearchModal = () => {
     setShowSearchModal(true);
   };
 
+  const onClickClub = (name: string, lat: number, lng: number) => {
+    setUserLocation({ lat: lat, lng: lng });
+    setClubList([
+      {
+        _id: '',
+        name,
+        address: { jibun: '', loadAddress: '' },
+        location: { coordinates: [lng, lat] },
+      },
+    ]);
+  };
+  const userLocTest = () => {
+    setUserLocation({ lat: 37, lng: 127.3 });
+  };
   return (
     <>
       <input type='checkbox' id='map-modal' className='modal-toggle' />
@@ -106,6 +121,7 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
         <div className='modal-box'>
           <div className='flex items-center'>
             <h3 className='font-bold text-lg mr-3'>클럽찾기</h3>
+            <button onClick={userLocTest}>위치변경 테스트</button>
             <input
               type='text'
               className='input input-primary h-5 text-xs'
@@ -161,6 +177,7 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
           onCancelSearchModal={() => {
             setShowSearchModal(false);
           }}
+          onClickClub={onClickClub}
         />
       ) : null}
       <label htmlFor='search-club-modal' ref={searchModalRef} />

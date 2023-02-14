@@ -1,17 +1,18 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import styles from '@/styles/Pagination.module.css';
 import classNames from 'classnames';
 import { getClubListByName } from '@/lib/api/club';
 import { Club } from '@/lib/types';
 import { useAppDispatch } from '@/store/hooks';
-import { updateAlertState } from '@/store/slices/AlertSlice';
 interface SearchClubListModalProps {
   onCancelSearchModal: () => void;
+  onClickClub: (name: string, lat: number, lng: number) => void;
 }
 
-const SearchClubListModal = ({ onCancelSearchModal }: SearchClubListModalProps) => {
+const SearchClubListModal = ({ onCancelSearchModal, onClickClub }: SearchClubListModalProps) => {
   const dispatch = useAppDispatch();
+  const modalRef = useRef(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [clubName, setClubName] = useState('');
@@ -33,6 +34,11 @@ const SearchClubListModal = ({ onCancelSearchModal }: SearchClubListModalProps) 
     if (res.resultCode === '0000') {
       setClubList(res.dataList);
     }
+  };
+
+  const clickClub = (name: string, lat: number, lng: number) => {
+    onClickClub(name, lat, lng);
+    (modalRef.current as any).click();
   };
 
   return (
@@ -63,25 +69,33 @@ const SearchClubListModal = ({ onCancelSearchModal }: SearchClubListModalProps) 
                 </tr>
               </thead>
               <tbody>
-                {clubList.length ? (
-                  clubList?.map((club, index) => {
-                    return (
-                      <tr key={club._id}>
-                        <td>{index}</td>
-                        <td>{club.name}</td>
-                        <td>
-                          {club.address.loadAddress ? club.address.loadAddress : club.address.jibun}
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <p className='text-center mt-10'>
-                    {hasSubmitted ? '검색 결과가 없습니다' : '클럽명으로 검색할 수 있습니다'}
-                  </p>
-                )}
+                {clubList?.map((club, index) => {
+                  return (
+                    <tr
+                      key={club._id}
+                      onClick={() =>
+                        clickClub(
+                          club.name,
+                          club.location.coordinates[1],
+                          club.location.coordinates[0],
+                        )
+                      }
+                    >
+                      <td>{index}</td>
+                      <td>{club.name}</td>
+                      <td>
+                        {club.address.loadAddress ? club.address.loadAddress : club.address.jibun}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
+            {clubList.length < 1 ? (
+              <p className='text-center mt-10'>
+                {hasSubmitted ? '검색 결과가 없습니다' : '클럽명을 검색해주세요'}
+              </p>
+            ) : null}
           </div>
           {clubList.length ? (
             <div className='mt-10 absolute bottom-6 ml-auto mr-auto left-0 right-20 text-center'>
@@ -95,7 +109,12 @@ const SearchClubListModal = ({ onCancelSearchModal }: SearchClubListModalProps) 
           ) : null}
 
           <div className='modal-action'>
-            <label htmlFor='search-club-modal' className='btn' onClick={onCancelSearchModal}>
+            <label
+              ref={modalRef}
+              htmlFor='search-club-modal'
+              className='btn'
+              onClick={onCancelSearchModal}
+            >
               확인
             </label>
           </div>
