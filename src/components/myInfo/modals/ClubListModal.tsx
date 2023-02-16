@@ -2,6 +2,13 @@ import KaKaoMap, { AddressInfo } from '@/components/Kakao/KaKaoMap';
 import { getNearClubList } from '@/lib/api/club';
 import { Club } from '@/lib/types';
 import { getLocation } from '@/lib/util/functions';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import {
+  mapState,
+  resetUserPosState,
+  updateMapPosState,
+  updateUserPosState,
+} from '@/store/slices/mapSlice';
 import { useEffect, useRef, useState } from 'react';
 import PostClubModal from './PostClubModal';
 import SearchClubListModal from './SearchClubListModal';
@@ -11,12 +18,18 @@ interface ClubListModalProps {
 }
 
 const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number }>({
-    lat: 33.5563,
-    lng: 126.79581,
-  });
+  // const [userLocation, setUserLocation] = useState<{ lat: number; lng: number }>({
+  //   lat: 33.5563,
+  //   lng: 126.79581,
+  // });
+  const dispatch = useAppDispatch();
+  const { userPosition, mapPosition } = useAppSelector(mapState);
+
   const postModalRef = useRef(null);
   const searchModalRef = useRef(null);
+
+  const [loading, setLoading] = useState(false);
+
   const [clubList, setClubList] = useState<Club[]>([]);
   const [clickedPosition, setClickedPosition] = useState<AddressInfo>();
   const [centerPosition, setCenterPosition] = useState<{ lat: number; lng: number }>();
@@ -26,21 +39,33 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
   useEffect(() => {
     const getUserLocation = async () => {
       const result = await getLocation();
-      onChangeMapCenter({
-        coordinates: [
-          !result.latitude ? 33.5563 : result.latitude,
-          !result.longitude ? 126.79581 : result.longitude,
-        ],
-        firstFlag: true,
-      });
 
-      setUserLocation({
-        lat: !result.latitude ? 33.5563 : result.latitude,
-        lng: !result.longitude ? 126.79581 : result.longitude,
-      });
+      dispatch(
+        updateUserPosState({
+          lat: result.latitude,
+          lng: result.longitude,
+        }),
+      );
+
+      dispatch(
+        updateMapPosState({
+          lat: result.latitude,
+          lng: result.longitude,
+        }),
+      );
     };
-    getUserLocation();
+
+    if (!userPosition.lat) {
+      getUserLocation();
+    }
   }, []);
+
+  useEffect(() => {
+    console.log(userPosition);
+    if (userPosition.lat) {
+      fetchNearClubList();
+    }
+  }, [userPosition]);
 
   useEffect(() => {
     if (showSearchModal) {
@@ -57,25 +82,25 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
     });
   };
 
-  const onChangeMapCenter = async ({
-    coordinates,
-    firstFlag,
-  }: {
-    coordinates: [number, number];
-    firstFlag?: boolean;
-  }) => {
-    const [lat, lng] = coordinates;
-    setCenterPosition({ lat, lng });
-    if (coordinates.length && firstFlag) {
-      console.log('first search');
-      fetchNearClubList(lat, lng);
-    }
-  };
+  // const onChangeMapCenter = async ({
+  //   coordinates,
+  //   firstFlag,
+  // }: {
+  //   coordinates: [number, number];
+  //   firstFlag?: boolean;
+  // }) => {
+  //   const [lat, lng] = coordinates;
+  //   setCenterPosition({ lat, lng });
+  //   if (coordinates.length && firstFlag) {
+  //     console.log('first search');
+  //     fetchNearClubList(lat, lng);
+  //   }
+  // };
 
-  const fetchNearClubList = async (lat?: number, lng?: number) => {
+  const fetchNearClubList = async () => {
     const clubList = await getNearClubList({
-      lat: lat ? lat : centerPosition!.lat,
-      lng: lng ? lng : centerPosition!.lng,
+      lat: mapPosition.lat!,
+      lng: mapPosition.lng!,
     });
     setClubList(clubList);
   };
@@ -91,9 +116,14 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
   };
 
   const resetUserPosition = () => {
-    // todo
-    // reset user position to current positiion
-    // setUserLocation({ lat });
+    dispatch(
+      updateMapPosState({
+        lat: userPosition.lat!,
+        lng: userPosition.lng!,
+      }),
+    ),
+      fetchNearClubList();
+    dispatch(resetUserPosState());
   };
 
   const onShowSearchModal = () => {
@@ -101,7 +131,13 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
   };
 
   const onClickClub = (name: string, lat: number, lng: number) => {
-    setUserLocation({ lat: lat, lng: lng });
+    dispatch(
+      updateUserPosState({
+        lat,
+        lng,
+      }),
+    );
+    // setUserLocation({ lat: lat, lng: lng });
     setClubList([
       {
         _id: '',
@@ -111,9 +147,7 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
       },
     ]);
   };
-  const userLocTest = () => {
-    setUserLocation({ lat: 37, lng: 127.3 });
-  };
+
   return (
     <>
       <input type='checkbox' id='map-modal' className='modal-toggle' />
@@ -121,7 +155,6 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
         <div className='modal-box'>
           <div className='flex items-center'>
             <h3 className='font-bold text-lg mr-3'>클럽찾기</h3>
-            <button onClick={userLocTest}>위치변경 테스트</button>
             <input
               type='text'
               className='input input-primary h-5 text-xs'
@@ -134,14 +167,13 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
           <p>지번:{clickedPosition?.jibun}</p>
           <p>도로명주소: {clickedPosition?.loadAddress}</p>
           <KaKaoMap
-            userLocation={userLocation}
+            // userLocation={userLocation}
             onClickMap={onClickMap}
-            onChangeMapCenter={onChangeMapCenter}
+            // onChangeMapCenter={onChangeMapCenter}
             clubList={clubList}
             onClickPostClub={onClickPostClub}
-            resetClickedPosition={resetClickedPosition}
           />
-          {centerPosition ? (
+          {userPosition.lat ? (
             <div>
               <button
                 onClick={() => fetchNearClubList()}

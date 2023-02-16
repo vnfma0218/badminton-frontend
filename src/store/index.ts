@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import alertReducer from './slices/AlertSlice';
 import modalReducer from './slices/ModalSlice';
+import mapReducer from './slices/mapSlice';
 // ...
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     auth: authReducer,
     alert: alertReducer,
     modal: modalReducer,
+    map: mapReducer,
     // comments: commentsReducer,
     // users: usersReducer,
   },
