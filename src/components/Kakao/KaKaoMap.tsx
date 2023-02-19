@@ -1,11 +1,6 @@
 import { Club } from '@/lib/types';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import {
-  mapState,
-  unsetUserPosState,
-  updateMapPosState,
-  updateUserPosState,
-} from '@/store/slices/mapSlice';
+import { mapState, updateMapPosState } from '@/store/slices/mapSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
@@ -31,7 +26,7 @@ interface IKaKaoMap {
 const KaKaoMap = ({ onClickMap, onClickPostClub, clubList }: IKaKaoMap) => {
   const [map, setMap] = useState<kakao.maps.Map>();
   const dispatch = useAppDispatch();
-  const { userPosition: userLocation, mapPosition, reset } = useAppSelector(mapState);
+  const { mapPosition } = useAppSelector(mapState);
   const [center, setCenter] = useState({
     lat: 33.452613,
     lng: 126.570888,
@@ -40,34 +35,10 @@ const KaKaoMap = ({ onClickMap, onClickPostClub, clubList }: IKaKaoMap) => {
 
   useEffect(() => {
     if (mapPosition.lat && mapPosition.lng) {
-      console.log('hji');
-
-      // updateMapPosState({
-      //   lat: userLocation.lat!,
-      //   lng: userLocation.lng!,
-      // }),
+      setCenter({ lat: mapPosition.lat, lng: mapPosition.lng });
     }
   }, [mapPosition]);
 
-  useEffect(() => {
-    if (reset) {
-      console.log('reset');
-      console.log(userLocation.lat!, userLocation.lng!);
-      console.log(mapPosition.lat!, mapPosition.lng!);
-
-      dispatch(
-        updateMapPosState({
-          lat: userLocation.lat!,
-          lng: userLocation.lng!,
-        }),
-      ),
-        setCenter({
-          lat: userLocation.lat!,
-          lng: userLocation.lng!,
-        });
-      dispatch(unsetUserPosState());
-    }
-  }, [reset]);
   return (
     <>
       <Map
@@ -92,7 +63,7 @@ const KaKaoMap = ({ onClickMap, onClickPostClub, clubList }: IKaKaoMap) => {
             onClickMap({ loadAddress, jibun, lat, lng });
           });
         }}
-        onCenterChanged={(map) => {
+        onDragEnd={(map) => {
           dispatch(
             updateMapPosState({
               lat: map.getCenter().getLat(),
@@ -104,6 +75,7 @@ const KaKaoMap = ({ onClickMap, onClickPostClub, clubList }: IKaKaoMap) => {
             lng: map.getCenter().getLng(),
           });
         }}
+        onCenterChanged={(map) => {}}
       >
         {position ? (
           <MapMarker position={position}>
