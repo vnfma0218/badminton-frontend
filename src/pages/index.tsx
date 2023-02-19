@@ -1,9 +1,7 @@
-import type { NextPage } from 'next'
-import { useContext } from 'react'
-import AuthContext from 'src/contexts/AuthContext'
+import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
-  return <h1 className='text-3xl font-bold font-Noto underline'>테스트!</h1>
-}
+  return <h1 className='text-3xl font-bold absolute top-1/2 left-1/3'>Home</h1>;
+};
 
-export default Home
+export default Home;

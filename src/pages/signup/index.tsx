@@ -1,15 +1,15 @@
-import styles from '@/styles/login/Login.module.css'
-import Link from 'next/link'
+import styles from '@/styles/login/Login.module.css';
+import Link from 'next/link';
 
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { publicAxios } from 'src/lib/axios'
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { publicAxios } from 'src/lib/axios';
 
 type Inputs = {
-  name: string
-  email: string
-  password: string
-  passwordConfirm: string
-}
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+};
 
 const SignupPage = () => {
   const {
@@ -19,15 +19,15 @@ const SignupPage = () => {
     setError,
     reset,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<Inputs>();
 
   const onSubmitHandler: SubmitHandler<Inputs> = async (data: Inputs) => {
-    const { name, email, password, passwordConfirm } = data
+    const { name, email, password, passwordConfirm } = data;
 
     if (password !== passwordConfirm) {
       setError('passwordConfirm', {
         message: '비밀번호가 서로 달라요',
-      })
+      });
     }
 
     const res = await publicAxios({
@@ -39,10 +39,10 @@ const SignupPage = () => {
         password,
         passwordConfirm,
       },
-    })
-    console.log(res)
-    reset()
-  }
+    });
+    console.log(res);
+    reset();
+  };
   //   console.log(errors);
   //  /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{10,}$/
   return (
@@ -135,9 +135,9 @@ const SignupPage = () => {
         </div>
       </div>
     </>
-  )
-}
-export default SignupPage
+  );
+};
+export default SignupPage;
 {
   /* <div className={styles.login}>
 <h1>Signup</h1>

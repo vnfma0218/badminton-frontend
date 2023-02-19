@@ -1,5 +1,14 @@
+import { Profile } from '@/pages/myInfo/edit';
+import { AxiosInstance } from 'axios';
 import { privateAxios, publicAxios } from '../axios';
+import { UserLevel } from './common';
 import { ResponseData } from './post';
+
+export type User = {
+  name: '';
+  intro: '';
+  level: UserLevel;
+};
 
 type RequestLogin = {
   email: string;
@@ -65,5 +74,24 @@ export const getUserNotification = async (
     },
   });
 
+  return res.data;
+};
+
+export const getUserById = async (
+  privateAxios: AxiosInstance,
+): Promise<ResponseData<{ user: User }>> => {
+  const res = await privateAxios({
+    url: `/userInfo`,
+    method: 'get',
+  });
+  return res.data;
+};
+
+export const editUser = async (privateAxios: AxiosInstance, data: Profile): Promise<Response> => {
+  const res = await privateAxios({
+    url: `/user/edit`,
+    method: 'put',
+    data,
+  });
   return res.data;
 };

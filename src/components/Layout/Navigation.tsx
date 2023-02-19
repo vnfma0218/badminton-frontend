@@ -26,13 +26,20 @@ const Navigation = () => {
     if (!accessToken) {
       getAccessToken();
     }
+    const dropdownDom = document.querySelector('.dropdown-content');
+    if (dropdownDom) {
+      (dropdownDom as HTMLUListElement).style.visibility = 'visible';
+    }
   }, []);
 
   const onLogout = async () => {
     const res = await logout(accessToken);
+
     if (res.resultCode === '0000') {
+      onHiddenDropdown();
       dispatch(updateAlertState({ show: true, message: '로그아웃 했어요' }));
       dispatch(clearAuthState());
+      router.replace('/login');
     }
   };
   // console.log(data?.dataList);
@@ -40,9 +47,20 @@ const Navigation = () => {
   const onNotiClick = () => {
     setNotiOpen(true);
   };
+  const onMyInfo = () => {
+    onHiddenDropdown();
+    router.push('/myInfo');
+  };
+
+  const onHiddenDropdown = () => {
+    const dropdownDom = document.querySelector('.dropdown-content');
+    if (dropdownDom) {
+      (dropdownDom as HTMLUListElement).style.visibility = 'hidden';
+    }
+  };
   return (
     <>
-      <nav className='navbar fixed justify-between w-full z-40 h-20 bg-primary px-14'>
+      <nav className='navbar fixed justify-between w-full z-40 h-20 bg-primary px-4'>
         <div className='page-title'>
           <Link href={'/'}>Home</Link>
         </div>
@@ -56,7 +74,7 @@ const Navigation = () => {
           <li className='mr-5'>
             <Link href={'/post/all'}>All</Link>
           </li>
-          <li className='mr-5'>
+          <li>
             <div className='dropdown dropdown-end'>
               <label tabIndex={0} className='m-1 cursor-pointer'>
                 {userId ? (
@@ -72,7 +90,7 @@ const Navigation = () => {
                   <a
                     onClick={() => {
                       if (!userId) {
-                        router.push('/login/temp');
+                        router.push('/login');
                       }
                     }}
                   >
@@ -82,17 +100,17 @@ const Navigation = () => {
               </label>
               <ul
                 tabIndex={0}
-                className={`dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 ${
+                className={`dropdown-content menu shadow bg-base-100 rounded-box w-36  ${
                   !userId && 'hidden'
                 }`}
               >
-                <li>
-                  <Link href={'/myInfo'}>내정보</Link>
+                <li className='text-sm' onClick={onMyInfo}>
+                  <a>내정보</a>
                 </li>
-                <li onClick={onLogout}>
+                <li className='text-sm' onClick={onLogout}>
                   <a>로그아웃</a>
                 </li>
-                <li onClick={onNotiClick}>
+                <li className='text-sm' onClick={onNotiClick}>
                   <a>알림</a>
                 </li>
               </ul>
