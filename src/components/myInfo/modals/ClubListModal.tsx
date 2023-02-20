@@ -1,3 +1,6 @@
+import { BiCurrentLocation } from 'react-icons/bi';
+import { IconContext } from 'react-icons';
+
 import KaKaoMap, { AddressInfo } from '@/components/Kakao/KaKaoMap';
 import Loading from '@/components/UIElement/Loading';
 import { getNearClubList } from '@/lib/api/club';
@@ -111,21 +114,18 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
     <>
       <input type='checkbox' id='map-modal' className='modal-toggle' />
       <div className='modal'>
-        <div className='modal-box'>
+        <div className='modal-box w-full h-full rounded-none'>
           <div className='flex items-center'>
-            <h3 className='font-bold text-lg mr-3'>클럽찾기</h3>
+            {/* <h3 className='font-bold text-lg mr-3'>클럽찾기</h3> */}
             <input
               type='text'
-              className='input input-primary h-5 text-xs'
-              placeholder='클럽명 검색'
+              className='input input-primary h-5 text-xs mb-3 p-3'
+              placeholder='클럽 검색'
               onClick={onShowSearchModal}
               // disabled
             />
             {loading ? <Loading /> : null}
           </div>
-
-          <p>지번:{clickedPosition?.jibun}</p>
-          <p>도로명주소: {clickedPosition?.loadAddress}</p>
           <KaKaoMap
             // userLocation={userLocation}
             onClickMap={onClickMap}
@@ -137,24 +137,31 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
             <div>
               <button
                 onClick={() => fetchNearClubList()}
-                className='btn absolute px-6 text-xs bg-black text-white border-white bottom-20 left-[35%] z-10'
+                className='btn btn-sm absolute px-6 text-xs bottom-20 left-[50%] translate-x-[-50%] z-10'
               >
-                현위치에서 재검색
+                재검색
               </button>
-              <button
-                onClick={resetUserPosition}
-                className='btn btn-primary absolute text-xs z-10 bottom-20'
-              >
-                내위치
+              <button onClick={resetUserPosition} className='absolute bottom-20 ring z-10 bg-white'>
+                <IconContext.Provider value={{ size: '2rem', color: 'black' }}>
+                  <BiCurrentLocation />
+                </IconContext.Provider>
               </button>
             </div>
           ) : null}
 
           <div className='modal-action'>
-            <label htmlFor='map-modal' className='btn' onClick={onCancelModal}>
+            <label
+              htmlFor='map-modal'
+              className='btn btn-primary btn-sm rounded-md'
+              onClick={onCancelModal}
+            >
               취소
             </label>
-            <label htmlFor='post-club-modal' ref={postModalRef} className='btn'>
+            <label
+              htmlFor='post-club-modal'
+              ref={postModalRef}
+              className='btn btn-primary btn-sm rounded-md'
+            >
               확인
             </label>
           </div>

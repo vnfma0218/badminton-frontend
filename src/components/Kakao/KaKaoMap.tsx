@@ -48,7 +48,7 @@ const KaKaoMap = ({ onClickMap, onClickPostClub, clubList }: IKaKaoMap) => {
         }}
         level={5}
         isPanto={true}
-        style={{ width: '100%', height: '360px' }}
+        style={{ width: '100%', height: '80%' }}
         onClick={(_t, mouseEvent) => {
           const geocoder = new kakao.maps.services.Geocoder();
           const lat = mouseEvent.latLng.getLat();

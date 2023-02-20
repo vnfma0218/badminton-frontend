@@ -110,13 +110,13 @@ const LoginPage = () => {
       </form>
       <div className='pt-3 grid grid-cols-3 divide-x-[2px] '>
         <Link href='/signup'>
-          <a className='pl-6 cursor-pointer'>아이디 찾기</a>
+          <a className='pl-6 cursor-pointer text-sm'>아이디 찾기</a>
         </Link>
         <Link href='/signup'>
-          <a className='pl-3 pr-3 cursor-pointer'>비밀번호 찾기</a>
+          <a className='pl-3 pr-3 cursor-pointer text-sm'>비밀번호 찾기</a>
         </Link>
         <Link href='/signup'>
-          <a className='pl-3 cursor-pointer'>회원가입</a>
+          <a className='pl-3 cursor-pointer text-sm'>회원가입</a>
         </Link>
       </div>
     </div>

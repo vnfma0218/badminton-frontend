@@ -36,26 +36,24 @@ const Navigation = () => {
     const res = await logout(accessToken);
 
     if (res.resultCode === '0000') {
-      onHiddenDropdown();
       dispatch(updateAlertState({ show: true, message: '로그아웃 했어요' }));
       dispatch(clearAuthState());
       router.replace('/login');
     }
   };
-  // console.log(data?.dataList);
 
   const onNotiClick = () => {
     setNotiOpen(true);
   };
   const onMyInfo = () => {
-    onHiddenDropdown();
+    handleClick();
     router.push('/myInfo');
   };
 
-  const onHiddenDropdown = () => {
-    const dropdownDom = document.querySelector('.dropdown-content');
-    if (dropdownDom) {
-      (dropdownDom as HTMLUListElement).style.visibility = 'hidden';
+  const handleClick = () => {
+    const elem = document.activeElement as HTMLElement;
+    if (elem) {
+      elem?.blur();
     }
   };
   return (
@@ -66,12 +64,12 @@ const Navigation = () => {
         </div>
         <ul className='nav-list'>
           {userId && (
-            <li className='mr-5'>
+            <li className='pr-4'>
               <Link href={'/post/new'}>New</Link>
             </li>
           )}
 
-          <li className='mr-5'>
+          <li className='pr-4'>
             <Link href={'/post/all'}>All</Link>
           </li>
           <li>

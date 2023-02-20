@@ -6,7 +6,6 @@ import Navigation from '@/components/Layout/Navigation';
 import Layout from '@/components/Layout/Layout';
 import '@/styles/globals.css';
 import '@/styles/Pagination.css';
-import 'material-icons/iconfont/material-icons.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
