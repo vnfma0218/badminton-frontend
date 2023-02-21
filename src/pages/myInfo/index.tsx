@@ -1,3 +1,4 @@
+import ClubFullSizeModal from '@/components/myInfo/modals/ClubFullSizeModal';
 import ClubListModal from '@/components/myInfo/modals/ClubListModal';
 import usePrivateAxios from '@/hooks/usePrivateAxios';
 import { getUserById, User } from '@/lib/api/user';
@@ -26,9 +27,6 @@ const MyInfoPage = () => {
   }, [accessToken]);
 
   const clickRegisterClub = () => {
-    setTimeout(() => {
-      (modalRef.current as any).click();
-    }, 100);
     setShowModal(true);
   };
 
@@ -38,7 +36,7 @@ const MyInfoPage = () => {
 
   return (
     <div className='px-3 pt-10'>
-      <p className='text-2xl mb-8'>My Profile</p>
+      <p className='text-xl mb-8 text-center'>My Profile</p>
       {/* 프로필 카드 */}
       <div className='card bg-base-100 shadow-xl py-6'>
         <div>
@@ -61,6 +59,7 @@ const MyInfoPage = () => {
         </div>
       </div>
       {/* 회원 클럽정보 */}
+      <p className='text-xl my-10 text-center'>Your Club</p>
       <div className='mt-10 card bg-base-100 shadow-xl py-6'>
         <div className='card-body'>
           <div>
@@ -69,7 +68,7 @@ const MyInfoPage = () => {
               <p> user.club.location</p>
             ) : (
               <button onClick={clickRegisterClub} className='btn btn-primary rounded-md px-2'>
-                가입클럽 등록하기
+                클럽 등록하기
               </button>
             )}
             {/* <p className='mt-3'>목감 클럽 (일반 회원)</p> */}
@@ -84,10 +83,7 @@ const MyInfoPage = () => {
           </div>
         </div>
       </div>
-
-      {/* 클럽 등록 모달 */}
-      {showModal ? <label htmlFor='map-modal' ref={modalRef}></label> : null}
-      {showModal ? <ClubListModal onCancelModal={onCancelModal} /> : null}
+      {showModal ? <ClubFullSizeModal onCloseModal={() => setShowModal(false)} /> : <></>}
     </div>
   );
 };

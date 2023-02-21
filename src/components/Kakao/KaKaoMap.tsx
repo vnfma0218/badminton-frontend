@@ -21,7 +21,7 @@ interface IKaKaoMap {
   onClickMap: (addrInfo: AddressInfo) => void;
 
   clubList: Club[];
-  onClickPostClub: () => void;
+  onClickPostClub?: () => void;
 }
 const KaKaoMap = ({ onClickMap, onClickPostClub, clubList }: IKaKaoMap) => {
   const [map, setMap] = useState<kakao.maps.Map>();
@@ -48,7 +48,7 @@ const KaKaoMap = ({ onClickMap, onClickPostClub, clubList }: IKaKaoMap) => {
         }}
         level={5}
         isPanto={true}
-        style={{ width: '100%', height: '80%' }}
+        style={{ width: '100%', height: '100%' }}
         onClick={(_t, mouseEvent) => {
           const geocoder = new kakao.maps.services.Geocoder();
           const lat = mouseEvent.latLng.getLat();

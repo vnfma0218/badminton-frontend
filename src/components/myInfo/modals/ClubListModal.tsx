@@ -114,7 +114,7 @@ const ClubListModal = ({ onCancelModal }: ClubListModalProps) => {
     <>
       <input type='checkbox' id='map-modal' className='modal-toggle' />
       <div className='modal'>
-        <div className='modal-box w-full h-full rounded-none'>
+        <div className='modal-box '>
           <div className='flex items-center'>
             {/* <h3 className='font-bold text-lg mr-3'>클럽찾기</h3> */}
             <input
