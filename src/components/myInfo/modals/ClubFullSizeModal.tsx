@@ -66,8 +66,10 @@ const ClubFullSizeModal = ({ onCloseModal }: ClubFullSizeModalProps) => {
   };
 
   const onShowSearchModal = () => {
-    (searchModalRef.current as any).click();
     setShowSearchModal(true);
+    setTimeout(() => {
+      (searchModalRef.current as any).click();
+    }, 100);
   };
 
   const resetUserPosition = () => {
@@ -93,17 +95,22 @@ const ClubFullSizeModal = ({ onCloseModal }: ClubFullSizeModalProps) => {
     <>
       <div className='fixed z-50 inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
         <div className='w-full h-full'>
-          <div onClick={onCloseModal} className='text-black text-xl top-4    absolute right-2 z-50'>
-            X
-          </div>
           <div className='h-full'>
-            <input
-              type='text'
-              className='input h-5 text-lg p-4 absolute left-[50%] top-3 translate-x-[-50%] z-50 rounded-md'
-              placeholder='클럽 검색'
-              onClick={onShowSearchModal}
-              // disabled
-            />
+            <div className='absolute top-4 left-4 right-4 z-50 flex justify-between items-center'>
+              <input
+                type='text'
+                className='input h-10 text-sm p-4 w-72   z-50 rounded-xl border-gray-400 border-1'
+                placeholder='클럽 검색'
+                onClick={onShowSearchModal}
+                // disabled
+              />
+              <div
+                onClick={onCloseModal}
+                className='text-xl p-4 bg-white rounded-full border z-50 w-10 h-10 flex items-center justify-center text-gray-500'
+              >
+                X
+              </div>
+            </div>
             <KaKaoMap onClickMap={onClickMap} clubList={clubList} />
             <button
               onClick={resetUserPosition}

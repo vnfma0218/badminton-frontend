@@ -50,18 +50,18 @@ const KaKaoMap = ({ onClickMap, onClickPostClub, clubList }: IKaKaoMap) => {
         isPanto={true}
         style={{ width: '100%', height: '100%' }}
         onClick={(_t, mouseEvent) => {
-          const geocoder = new kakao.maps.services.Geocoder();
-          const lat = mouseEvent.latLng.getLat();
-          const lng = mouseEvent.latLng.getLng();
-          setPosition({
-            lat,
-            lng,
-          });
-          geocoder.coord2Address(lng, lat, (result, status) => {
-            const loadAddress = result[0].road_address?.address_name;
-            const jibun = result[0].address?.address_name;
-            onClickMap({ loadAddress, jibun, lat, lng });
-          });
+          // const geocoder = new kakao.maps.services.Geocoder();
+          // const lat = mouseEvent.latLng.getLat();
+          // const lng = mouseEvent.latLng.getLng();
+          // setPosition({
+          //   lat,
+          //   lng,
+          // });
+          // geocoder.coord2Address(lng, lat, (result, status) => {
+          //   const loadAddress = result[0].road_address?.address_name;
+          //   const jibun = result[0].address?.address_name;
+          //   onClickMap({ loadAddress, jibun, lat, lng });
+          // });
         }}
         onDragEnd={(map) => {
           dispatch(

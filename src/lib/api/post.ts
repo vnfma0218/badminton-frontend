@@ -1,12 +1,8 @@
 import { AxiosInstance } from 'axios';
 import { publicAxios } from '../axios';
 import { Comment, Post } from '../types';
+import { ResponseData } from './common';
 import { Response } from './user';
-
-export type ResponseData<T> = {
-  resultCode: '0000' | '9999';
-  dataList: T;
-};
 
 export interface getPostListResp {
   postList: Post[];

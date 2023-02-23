@@ -2,7 +2,7 @@ import { AddressInfo } from '@/components/Kakao/KaKaoMap';
 import { AxiosInstance } from 'axios';
 import { publicAxios } from '../axios';
 import { Club } from '../types';
-import { ResponseData } from './post';
+import { ResponseData, ResponseDataWithPageInfo } from './common';
 import { Response } from './user';
 export const postClub = async (
   privateAxios: AxiosInstance,
@@ -25,13 +25,23 @@ export const getNearClubList = async (params: { lat: number; lng: number }): Pro
 
   return res.data;
 };
-export const getClubListByName = async (params: {
+export const getClubListByName = async ({
+  page,
+  name,
+  size = 10,
+}: {
+  page: number;
   name: string;
-}): Promise<ResponseData<Club[]>> => {
+  size?: number;
+}): Promise<ResponseDataWithPageInfo<Club[]>> => {
   const res = await publicAxios({
     url: '/search/club-list',
     method: 'get',
-    params: params,
+    params: {
+      page,
+      name,
+      size,
+    },
   });
 
   return res.data;
