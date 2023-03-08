@@ -1,5 +1,4 @@
 import ClubFullSizeModal from '@/components/myInfo/modals/ClubFullSizeModal';
-import ClubListModal from '@/components/myInfo/modals/ClubListModal';
 import usePrivateAxios from '@/hooks/usePrivateAxios';
 import { getUserById, User } from '@/lib/api/user';
 import { useAppSelector } from '@/store/hooks';

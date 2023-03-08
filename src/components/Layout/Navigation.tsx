@@ -11,17 +11,17 @@ import Modal from '../Modal/Modal';
 
 const Navigation = () => {
   const router = useRouter();
-  const refresh = useRefreshToken();
+  // const refresh = useRefreshToken();
   const { userId, accessToken } = useAppSelector(authState);
   const dispatch = useAppDispatch();
 
   const [notiOpen, setNotiOpen] = useState<boolean>(false);
 
-  const { data } = useSWR(accessToken ? '/noti/all' : null, () => getUserNotification(accessToken));
+  // const { data } = useSWR(accessToken ? '/noti/all' : null, () => getUserNotification(accessToken));
 
   useEffect(() => {
     const getAccessToken = async () => {
-      await refresh();
+      // await refresh();
     };
     if (!accessToken) {
       getAccessToken();
@@ -77,11 +77,11 @@ const Navigation = () => {
               <label tabIndex={0} className='m-1 cursor-pointer'>
                 {userId ? (
                   <div className='indicator relative'>
-                    {data && data?.dataList.notiList.length > 0 && (
+                    {/* {data && data?.dataList.notiList.length > 0 && (
                       <span className='indicator-item badge indicator-top indicator-end badge-secondary absolute -right-2'>
                         {data?.dataList.notiList.length}
                       </span>
-                    )}
+                    )} */}
                     <span>My</span>
                   </div>
                 ) : (
@@ -128,11 +128,11 @@ const Navigation = () => {
               X
             </button>
             <ul className='mt-7 max-h-64 overflow-y-scroll w-full'>
-              {data && data?.dataList.notiList.length < 0 ? (
+              {/* {data && data?.dataList.notiList.length < 0 ? (
                 data?.dataList.notiList.map((noti) => <li className='mb-8'>{noti.content}</li>)
               ) : (
                 <span>알람 내역이 없어요</span>
-              )}
+              )} */}
             </ul>
           </div>
         </Modal>

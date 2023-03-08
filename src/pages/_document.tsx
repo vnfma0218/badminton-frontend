@@ -10,7 +10,7 @@ export default function Document() {
           rel='stylesheet'
         />
       </Head>
-      <body className='font-Noto'>
+      <body>
         <Main />
         <NextScript />
         <Script

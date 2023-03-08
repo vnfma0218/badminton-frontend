@@ -2,8 +2,7 @@ import { Profile } from '@/pages/myInfo/edit';
 import { AxiosInstance } from 'axios';
 import { privateAxios, publicAxios } from '../axios';
 import { Club } from '../types';
-import { UserLevel } from './common';
-import { ResponseData } from './post';
+import { ResponseData, UserLevel } from './common';
 
 export type User = {
   name: '';

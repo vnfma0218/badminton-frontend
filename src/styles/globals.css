@@ -7,7 +7,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Noto Sans KR', sans-serif;
+  /* font-family: 'Noto Sans KR', sans-serif; */
 }
 
 a {
@@ -32,17 +32,17 @@ input[type='number']::-webkit-inner-spin-button {
 .lds-ring {
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 40px;
+  height: 40px;
 }
 .lds-ring div {
   box-sizing: border-box;
   display: block;
   position: absolute;
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   margin: 8px;
-  border: 8px solid #fff;
+  border: 5px solid #fff;
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
   border-color: black transparent transparent transparent;

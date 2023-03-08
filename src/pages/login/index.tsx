@@ -75,6 +75,7 @@ const LoginPage = () => {
           type='text'
           placeholder='email'
           className={`input input-primary w-80 ${errors.email ? '' : 'mb-4'}`}
+          data-cy='login-input-email'
         />
         {errors.email?.message && (
           <div className=''>
@@ -92,6 +93,7 @@ const LoginPage = () => {
           type='password'
           placeholder='password'
           className='input input-primary w-80'
+          data-cy='login-input-password'
         />
 
         {errors.password?.message && (
@@ -102,8 +104,9 @@ const LoginPage = () => {
 
         <button
           type='submit'
-          className={`btn btn-primary w-full mt-11 disabled`}
+          className='btn btn-primary w-full mt-11'
           disabled={loading}
+          data-cy='login-button-submit'
         >
           로그인
         </button>

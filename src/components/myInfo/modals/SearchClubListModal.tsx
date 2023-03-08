@@ -26,7 +26,6 @@ const SearchClubListModal = ({ onCancelSearchModal, onClickClub }: SearchClubLis
   });
 
   useEffect(() => {
-    onSubmitClubList();
     return () => {
       console.log('destroy');
     };
@@ -82,7 +81,7 @@ const SearchClubListModal = ({ onCancelSearchModal, onClickClub }: SearchClubLis
             <p className='ml-2 text-sm text-red-400 text-left'>{errorMsg}</p>
           ) : null}
           {clubList.length > 0 ? (
-            <div className='overflow-x-auto mt-6 min-h-[70%] inline-block'>
+            <div className='overflow-x-auto mt-6 min-h-[70%] w-11/12 inline-block'>
               <div className='flex items-center mb-2'>
                 <p className='text-sm text-left mr-2'>total</p>
                 <p className='text-sm text-purple-500'>{pageInfo.totalCount}</p>

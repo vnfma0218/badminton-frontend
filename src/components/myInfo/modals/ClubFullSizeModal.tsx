@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { mapState, updateMapPosState } from '@/store/slices/mapSlice';
 import { useEffect, useRef, useState } from 'react';
 import SearchClubListModal from './SearchClubListModal';
+import Loading from '@/components/UIElement/Loading';
 
 interface ClubFullSizeModalProps {
   onCloseModal: () => void;
@@ -114,9 +115,9 @@ const ClubFullSizeModal = ({ onCloseModal }: ClubFullSizeModalProps) => {
             <KaKaoMap onClickMap={onClickMap} clubList={clubList} />
             <button
               onClick={resetUserPosition}
-              className='absolute bottom-20 z-10 bg-white p-2 rounded-full'
+              className='absolute bottom-20 left-3 z-10 bg-white p-2 rounded-full'
             >
-              <IconContext.Provider value={{ size: '1.5rem', color: 'black' }}>
+              <IconContext.Provider value={{ size: '2rem', color: 'F99417' }}>
                 <BiCurrentLocation />
               </IconContext.Provider>
             </button>
