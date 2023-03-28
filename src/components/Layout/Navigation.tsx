@@ -1,39 +1,26 @@
-import useRefreshToken from '@/hooks/useRefreshToken';
-import { getUserNotification, logout } from '@/lib/api/user';
+import { logout } from '@/lib/api/user';
 import { updateAlertState } from '@/store/slices/AlertSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { authState, clearAuthState } from 'src/store/slices/authSlice';
-import useSWR from 'swr';
-import Modal from '../Modal/Modal';
+import { useCookies } from 'react-cookie';
+import { useAppDispatch } from 'src/store/hooks';
+import { clearAuthState } from 'src/store/slices/authSlice';
 
 const Navigation = () => {
+  const [loggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
-  // const refresh = useRefreshToken();
-  const { userId, accessToken } = useAppSelector(authState);
   const dispatch = useAppDispatch();
-
-  const [notiOpen, setNotiOpen] = useState<boolean>(false);
-
-  // const { data } = useSWR(accessToken ? '/noti/all' : null, () => getUserNotification(accessToken));
+  const [cookies] = useCookies(['accessToken', 'userId']);
 
   useEffect(() => {
-    const getAccessToken = async () => {
-      // await refresh();
-    };
-    if (!accessToken) {
-      getAccessToken();
-    }
-    const dropdownDom = document.querySelector('.dropdown-content');
-    if (dropdownDom) {
-      (dropdownDom as HTMLUListElement).style.visibility = 'visible';
-    }
+    setIsLoggedIn(() => {
+      return cookies.userId ? true : false;
+    });
   }, []);
 
   const onLogout = async () => {
-    const res = await logout(accessToken);
+    const res = await logout();
 
     if (res.resultCode === '0000') {
       dispatch(updateAlertState({ show: true, message: '로그아웃 했어요' }));
@@ -42,9 +29,6 @@ const Navigation = () => {
     }
   };
 
-  const onNotiClick = () => {
-    setNotiOpen(true);
-  };
   const onMyInfo = () => {
     handleClick();
     router.push('/myInfo');
@@ -56,14 +40,15 @@ const Navigation = () => {
       elem?.blur();
     }
   };
+
   return (
     <>
-      <nav className='navbar fixed justify-between w-full z-40 h-20 bg-primary px-4'>
+      <nav className='navbar fixed justify-between w-full z-40 h-20 bg-primary px-4 text-white'>
         <div className='page-title'>
           <Link href={'/'}>Home</Link>
         </div>
         <ul className='nav-list'>
-          {userId && (
+          {loggedIn && (
             <li className='pr-4'>
               <Link href={'/post/new'}>New</Link>
             </li>
@@ -75,19 +60,14 @@ const Navigation = () => {
           <li>
             <div className='dropdown dropdown-end'>
               <label tabIndex={0} className='m-1 cursor-pointer'>
-                {userId ? (
+                {loggedIn ? (
                   <div className='indicator relative'>
-                    {/* {data && data?.dataList.notiList.length > 0 && (
-                      <span className='indicator-item badge indicator-top indicator-end badge-secondary absolute -right-2'>
-                        {data?.dataList.notiList.length}
-                      </span>
-                    )} */}
                     <span>My</span>
                   </div>
                 ) : (
                   <a
                     onClick={() => {
-                      if (!userId) {
+                      if (!loggedIn) {
                         router.push('/login');
                       }
                     }}
@@ -98,8 +78,8 @@ const Navigation = () => {
               </label>
               <ul
                 tabIndex={0}
-                className={`dropdown-content menu shadow bg-base-100 rounded-box w-36  ${
-                  !userId && 'hidden'
+                className={`dropdown-content menu shadow bg-base-100 rounded-box w-36 text-black  ${
+                  !loggedIn && 'hidden'
                 }`}
               >
                 <li className='text-sm' onClick={onMyInfo}>
@@ -108,35 +88,11 @@ const Navigation = () => {
                 <li className='text-sm' onClick={onLogout}>
                   <a>로그아웃</a>
                 </li>
-                <li className='text-sm' onClick={onNotiClick}>
-                  <a>알림</a>
-                </li>
               </ul>
             </div>
           </li>
         </ul>
       </nav>
-      {notiOpen && (
-        <Modal>
-          <div>
-            <button
-              className='btn btn-sm btn-circle absolute right-2 top-2'
-              onClick={() => {
-                setNotiOpen(false);
-              }}
-            >
-              X
-            </button>
-            <ul className='mt-7 max-h-64 overflow-y-scroll w-full'>
-              {/* {data && data?.dataList.notiList.length < 0 ? (
-                data?.dataList.notiList.map((noti) => <li className='mb-8'>{noti.content}</li>)
-              ) : (
-                <span>알람 내역이 없어요</span>
-              )} */}
-            </ul>
-          </div>
-        </Modal>
-      )}
     </>
   );
 };

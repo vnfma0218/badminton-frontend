@@ -49,13 +49,10 @@ export const login = async (data: RequestLogin): Promise<LoginResp> => {
   };
 };
 
-export const logout = async (accessToken: string): Promise<Response> => {
-  const res = await privateAxios({
+export const logout = async (): Promise<Response> => {
+  const res = await publicAxios({
     url: '/logout',
     method: 'get',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
   });
 
   return {
@@ -93,6 +90,14 @@ export const editUser = async (privateAxios: AxiosInstance, data: Profile): Prom
     url: `/user/edit`,
     method: 'put',
     data,
+  });
+  return res.data;
+};
+
+export const verifyJWT = async (privateAxios: AxiosInstance): Promise<Response> => {
+  const res = await privateAxios({
+    url: `/verifyJWT`,
+    method: 'get',
   });
   return res.data;
 };

@@ -16,7 +16,7 @@ const Layout = ({ children }: LayoutProps) => {
   const dispatch = useAppDispatch();
   const { show } = useAppSelector(alertState);
   const { accessToken } = useAppSelector(authState);
-  const [cookies, setCookie, removeCookie] = useCookies(['accessToken']);
+  const [cookies] = useCookies(['accessToken', 'userId']);
 
   useEffect(() => {
     if (!accessToken) {
@@ -30,7 +30,7 @@ const Layout = ({ children }: LayoutProps) => {
   }, []);
 
   return (
-    <div data-theme='pastel' className='h-screen'>
+    <div className='h-screen'>
       {children}
       {show && <ToastModal />}
     </div>

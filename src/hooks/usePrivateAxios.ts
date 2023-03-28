@@ -7,6 +7,7 @@ import useRefreshToken from './useRefreshToken';
 const usePrivateAxios = () => {
   const { accessToken } = useAppSelector(authState);
   const refresh = useRefreshToken();
+
   useEffect(() => {
     const requrestIntercept = privateAxios.interceptors.request.use(
       (config) => {

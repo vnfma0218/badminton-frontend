@@ -52,7 +52,7 @@ const Address = ({ onSuccessAddr }: AddressProps) => {
   return (
     <>
       <Script src='//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js' />
-      <button onClick={onClickAddrerss} className='btn btn-secondary rounded-none'>
+      <button onClick={onClickAddrerss} className='btn'>
         주소 입력
       </button>
     </>
