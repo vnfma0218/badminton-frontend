@@ -30,7 +30,7 @@ const Layout = ({ children }: LayoutProps) => {
   }, []);
 
   return (
-    <div className='h-screen'>
+    <div>
       {children}
       {show && <ToastModal />}
     </div>
