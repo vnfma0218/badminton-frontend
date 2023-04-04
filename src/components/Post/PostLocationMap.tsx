@@ -12,9 +12,10 @@ interface IPostLocationMap {
 }
 const PostLocationMap = ({ onCloseModal }: IPostLocationMap) => {
   const [center, setCenter] = useState({
-    lat: 33.452613,
-    lng: 126.570888,
+    lat: 37.5058,
+    lng: 126.8978,
   });
+
   return (
     <>
       <div className='fixed z-50 inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>

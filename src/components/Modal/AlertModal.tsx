@@ -1,11 +1,26 @@
+import { useEffect, useRef } from 'react';
+
 interface AlertModalProps {
-  title: String;
+  show: boolean;
+  title: string;
   confirmCbFn?: () => void;
 }
 
-const AlertModal = ({ title, confirmCbFn }: AlertModalProps) => {
+const AlertModal = ({ show, title, confirmCbFn }: AlertModalProps) => {
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    if (show) {
+      (modalRef.current as any).click();
+    }
+  }, [show]);
+
   return (
     <>
+      <label htmlFor='alert-modal' className='btn hidden' ref={modalRef}>
+        open modal
+      </label>
+
       <input type='checkbox' id='alert-modal' className='modal-toggle' />
       <div className='modal'>
         <div className='modal-box'>

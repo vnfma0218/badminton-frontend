@@ -2,17 +2,20 @@ import Address, { addrInfo } from '@/components/Kakao/Address';
 import { registerPostItem } from '@/lib/api/post';
 import { updateAlertState } from '@/store/slices/AlertSlice';
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller, SubmitErrorHandler } from 'react-hook-form';
 import usePrivateAxios from 'src/hooks/usePrivateAxios';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
 import PostLocationMap from '@/components/Post/PostLocationMap';
-
+import { ko } from 'date-fns/locale';
+import AlertModal from '@/components/Modal/AlertModal';
+registerLocale('ko', ko);
 export type PostInputs = {
   content: string;
   title: string;
-  neededPeople: string;
+  neededPeople: number;
+  date: Date;
 };
 
 const RegisterPostPage = () => {
@@ -22,20 +25,29 @@ const RegisterPostPage = () => {
     reset,
     getValues,
     watch,
+    control,
     formState: { errors },
   } = useForm<PostInputs>({
     defaultValues: {
-      neededPeople: '1',
+      neededPeople: 1,
     },
   });
   const [startDate, setStartDate] = useState(new Date());
   const [location, setLocation] = useState({ jibunAddress: '', roadAddress: '', zonecode: '' });
   const [showMap, setShowMap] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
+  const modalRef = useRef(null);
   const dispatch = useAppDispatch();
   const privateAxios = usePrivateAxios();
 
   watch();
+  useEffect(() => {
+    if (showAlert) {
+      setShowAlert(false);
+    }
+  }, [showAlert]);
+
   const onSubmitPost = async (data: PostInputs) => {
     console.log('data', data);
     const { content, title } = data;
@@ -66,6 +78,12 @@ const RegisterPostPage = () => {
     }
   };
 
+  const onInvalid = (errors: any) => {
+    console.log(errors);
+    setShowAlert(true);
+    return null;
+  };
+
   const openMap = () => {
     setShowMap(true);
   };
@@ -75,7 +93,7 @@ const RegisterPostPage = () => {
   return (
     <div>
       <div className='flex justify-center mt-7 px-5'>
-        <form onSubmit={handleSubmit(onSubmitPost)} className='flex flex-col w-full'>
+        <form onSubmit={handleSubmit(onSubmitPost, onInvalid)} className='flex flex-col w-full'>
           <div className='form-control mb-5'>
             <label className='mb-2'>제목</label>
             <input
@@ -85,7 +103,7 @@ const RegisterPostPage = () => {
               })}
               type='text'
               name='title'
-              placeholder='제목'
+              placeholder='제목을 작성해주세요(5자 이상)'
               className='input input-primary'
             />
           </div>
@@ -95,10 +113,11 @@ const RegisterPostPage = () => {
               {...register('content', {
                 required: true,
                 minLength: 10,
+                maxLength: 100,
               })}
               className='textarea textarea-primary w-full mb-2 h-40'
               name='content'
-              placeholder='포스트 작성해주세요'
+              placeholder='내용을 작성해주세요(10~100자)'
             ></textarea>
           </div>
           <div className='form-control'>
@@ -107,29 +126,42 @@ const RegisterPostPage = () => {
               type='range'
               min='1'
               max='20'
+              {...register('neededPeople', { required: true, min: 1, max: 20 })}
               // value='40'
               className='range mb-4'
-              {...register('neededPeople', {
-                required: true,
-              })}
             />
           </div>
 
           <div className='form-control'>
             <label className='mb-2'>일시</label>
-            <DatePicker
-              dateFormat='yyyy년 MM월 dd일 aa h:mm'
-              timeFormat='p'
-              selected={startDate}
-              onChange={(date) => setStartDate(date!)}
-              showTimeSelect
-              className='input input-primary w-full mb-4'
-              locale='ko'
-              minDate={new Date()}
+            <Controller
+              control={control}
+              name='date'
+              render={({ field: { onChange, value } }) => (
+                <DatePicker
+                  dateFormat='yyyy년 MM월 dd일 aa h:mm'
+                  timeFormat='p'
+                  selected={value}
+                  onChange={onChange}
+                  showTimeSelect
+                  className='input input-primary w-full mb-4'
+                  locale='ko'
+                  minDate={new Date()}
+                />
+              )}
+              rules={{ required: true }}
             />
           </div>
           <div className='form-control'>
-            <label className='mb-2'>위치 ({getLocationNm()})</label>
+            <label className='mb-2'>
+              위치 (
+              {location.jibunAddress
+                ? location.jibunAddress
+                : location.roadAddress
+                ? location.roadAddress
+                : '운동 장소를 입력해주세요'}
+              )
+            </label>
             <div className='flex mb-3'>
               <Address onSuccessAddr={onSuccessAddr} />
               <button className='btn ml-2' onClick={openMap}>
@@ -142,7 +174,9 @@ const RegisterPostPage = () => {
           </button>
         </form>
       </div>
+
       {showMap ? <PostLocationMap onCloseModal={onCloseModal} /> : null}
+      <AlertModal show={showAlert} title={'테스트'} />
     </div>
   );
 };
